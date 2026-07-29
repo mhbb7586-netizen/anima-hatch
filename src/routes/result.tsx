@@ -164,9 +164,9 @@ function StatRow({ k, value }: { k: StatKey; value: number }) {
   return (
     <div className="flex items-center gap-2 text-[11px]">
       <PixelIcon name={s.icon} size={16} color={s.color} />
-      <div className="w-8 text-[var(--fg)]/90">{s.label}</div>
-      <PixelStatBar value={value} color={s.color} segments={8} />
-      <div className="ml-auto text-[10px] text-[var(--fg)]/70">{value}%</div>
+      <div className="w-[42px] shrink-0 text-[var(--fg)]/90 whitespace-nowrap">{s.label}</div>
+      <PixelStatBar value={value} color={s.color} segments={6} />
+      <div className="ml-auto text-[10px] text-[var(--fg)]/70 shrink-0">{value}%</div>
     </div>
   );
 }

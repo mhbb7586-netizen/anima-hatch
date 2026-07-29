@@ -68,7 +68,7 @@
   --color-secondary: var(--bg-mid);
   --color-secondary-foreground: var(--fg);
 
-  --font-pixel: "DungGeunMo", "Galmuri11", "Press Start 2P", monospace;
+  --font-pixel: "Galmuri11", "Galmuri9", "Press Start 2P", monospace;
 }
 
 :root {
