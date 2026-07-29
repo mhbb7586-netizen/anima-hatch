@@ -9,8 +9,68 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as WaitingRouteImport } from './routes/waiting'
+import { Route as TutorialRouteImport } from './routes/tutorial'
+import { Route as SwipeRouteImport } from './routes/swipe'
+import { Route as ResultRouteImport } from './routes/result'
+import { Route as ProfileRouteImport } from './routes/profile'
+import { Route as MypageRouteImport } from './routes/mypage'
+import { Route as InviteRouteImport } from './routes/invite'
+import { Route as HatchRouteImport } from './routes/hatch'
+import { Route as CompleteRouteImport } from './routes/complete'
+import { Route as CharacterRouteImport } from './routes/character'
 import { Route as IndexRouteImport } from './routes/index'
 
+const WaitingRoute = WaitingRouteImport.update({
+  id: '/waiting',
+  path: '/waiting',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TutorialRoute = TutorialRouteImport.update({
+  id: '/tutorial',
+  path: '/tutorial',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SwipeRoute = SwipeRouteImport.update({
+  id: '/swipe',
+  path: '/swipe',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ResultRoute = ResultRouteImport.update({
+  id: '/result',
+  path: '/result',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ProfileRoute = ProfileRouteImport.update({
+  id: '/profile',
+  path: '/profile',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MypageRoute = MypageRouteImport.update({
+  id: '/mypage',
+  path: '/mypage',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const InviteRoute = InviteRouteImport.update({
+  id: '/invite',
+  path: '/invite',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const HatchRoute = HatchRouteImport.update({
+  id: '/hatch',
+  path: '/hatch',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CompleteRoute = CompleteRouteImport.update({
+  id: '/complete',
+  path: '/complete',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CharacterRoute = CharacterRouteImport.update({
+  id: '/character',
+  path: '/character',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -19,28 +79,172 @@ const IndexRoute = IndexRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/character': typeof CharacterRoute
+  '/complete': typeof CompleteRoute
+  '/hatch': typeof HatchRoute
+  '/invite': typeof InviteRoute
+  '/mypage': typeof MypageRoute
+  '/profile': typeof ProfileRoute
+  '/result': typeof ResultRoute
+  '/swipe': typeof SwipeRoute
+  '/tutorial': typeof TutorialRoute
+  '/waiting': typeof WaitingRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/character': typeof CharacterRoute
+  '/complete': typeof CompleteRoute
+  '/hatch': typeof HatchRoute
+  '/invite': typeof InviteRoute
+  '/mypage': typeof MypageRoute
+  '/profile': typeof ProfileRoute
+  '/result': typeof ResultRoute
+  '/swipe': typeof SwipeRoute
+  '/tutorial': typeof TutorialRoute
+  '/waiting': typeof WaitingRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/character': typeof CharacterRoute
+  '/complete': typeof CompleteRoute
+  '/hatch': typeof HatchRoute
+  '/invite': typeof InviteRoute
+  '/mypage': typeof MypageRoute
+  '/profile': typeof ProfileRoute
+  '/result': typeof ResultRoute
+  '/swipe': typeof SwipeRoute
+  '/tutorial': typeof TutorialRoute
+  '/waiting': typeof WaitingRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/character'
+    | '/complete'
+    | '/hatch'
+    | '/invite'
+    | '/mypage'
+    | '/profile'
+    | '/result'
+    | '/swipe'
+    | '/tutorial'
+    | '/waiting'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/character'
+    | '/complete'
+    | '/hatch'
+    | '/invite'
+    | '/mypage'
+    | '/profile'
+    | '/result'
+    | '/swipe'
+    | '/tutorial'
+    | '/waiting'
+  id:
+    | '__root__'
+    | '/'
+    | '/character'
+    | '/complete'
+    | '/hatch'
+    | '/invite'
+    | '/mypage'
+    | '/profile'
+    | '/result'
+    | '/swipe'
+    | '/tutorial'
+    | '/waiting'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  CharacterRoute: typeof CharacterRoute
+  CompleteRoute: typeof CompleteRoute
+  HatchRoute: typeof HatchRoute
+  InviteRoute: typeof InviteRoute
+  MypageRoute: typeof MypageRoute
+  ProfileRoute: typeof ProfileRoute
+  ResultRoute: typeof ResultRoute
+  SwipeRoute: typeof SwipeRoute
+  TutorialRoute: typeof TutorialRoute
+  WaitingRoute: typeof WaitingRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/waiting': {
+      id: '/waiting'
+      path: '/waiting'
+      fullPath: '/waiting'
+      preLoaderRoute: typeof WaitingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/tutorial': {
+      id: '/tutorial'
+      path: '/tutorial'
+      fullPath: '/tutorial'
+      preLoaderRoute: typeof TutorialRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/swipe': {
+      id: '/swipe'
+      path: '/swipe'
+      fullPath: '/swipe'
+      preLoaderRoute: typeof SwipeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/result': {
+      id: '/result'
+      path: '/result'
+      fullPath: '/result'
+      preLoaderRoute: typeof ResultRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/profile': {
+      id: '/profile'
+      path: '/profile'
+      fullPath: '/profile'
+      preLoaderRoute: typeof ProfileRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/mypage': {
+      id: '/mypage'
+      path: '/mypage'
+      fullPath: '/mypage'
+      preLoaderRoute: typeof MypageRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/invite': {
+      id: '/invite'
+      path: '/invite'
+      fullPath: '/invite'
+      preLoaderRoute: typeof InviteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/hatch': {
+      id: '/hatch'
+      path: '/hatch'
+      fullPath: '/hatch'
+      preLoaderRoute: typeof HatchRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/complete': {
+      id: '/complete'
+      path: '/complete'
+      fullPath: '/complete'
+      preLoaderRoute: typeof CompleteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/character': {
+      id: '/character'
+      path: '/character'
+      fullPath: '/character'
+      preLoaderRoute: typeof CharacterRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -53,17 +257,17 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  CharacterRoute: CharacterRoute,
+  CompleteRoute: CompleteRoute,
+  HatchRoute: HatchRoute,
+  InviteRoute: InviteRoute,
+  MypageRoute: MypageRoute,
+  ProfileRoute: ProfileRoute,
+  ResultRoute: ResultRoute,
+  SwipeRoute: SwipeRoute,
+  TutorialRoute: TutorialRoute,
+  WaitingRoute: WaitingRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
