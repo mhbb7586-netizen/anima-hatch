@@ -2,17 +2,22 @@
 @source "../src";
 
 @font-face {
-  font-family: "DungGeunMo";
-  src: url("https://cdn.jsdelivr.net/gh/webfontworld/dunggeunmo/DungGeunMo.woff2") format("woff2"),
-       url("https://cdn.jsdelivr.net/gh/webfontworld/dunggeunmo/DungGeunMo.woff") format("woff");
+  font-family: "Galmuri11";
+  src: url("https://cdn.jsdelivr.net/gh/quiple/galmuri/dist/Galmuri11.woff2") format("woff2");
   font-weight: normal;
   font-style: normal;
   font-display: swap;
 }
-
 @font-face {
-  font-family: "Galmuri11";
-  src: url("https://cdn.jsdelivr.net/gh/quiple/galmuri/dist/Galmuri11.woff2") format("woff2");
+  font-family: "Galmuri11Bold";
+  src: url("https://cdn.jsdelivr.net/gh/quiple/galmuri/dist/Galmuri11-Bold.woff2") format("woff2");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Galmuri9";
+  src: url("https://cdn.jsdelivr.net/gh/quiple/galmuri/dist/Galmuri9.woff2") format("woff2");
   font-weight: normal;
   font-style: normal;
   font-display: swap;
