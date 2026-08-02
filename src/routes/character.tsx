@@ -21,7 +21,7 @@ export const Route = createFileRoute("/character")({
 
 const toneMap: Record<string, "purple" | "orange" | "green" | "yellow" | "blue" | "pink"> = {
   wisdom: "purple", courage: "orange", humanity: "green",
-  justice: "yellow", temperance: "blue", creativity: "pink",
+  justice: "yellow", temperance: "blue", transcendence: "pink",
 };
 
 function Dex() {
