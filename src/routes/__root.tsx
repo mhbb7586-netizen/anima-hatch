@@ -79,11 +79,15 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { name: "viewport", content: "width=device-width, initial-scale=1, viewport-fit=cover" },
       { name: "theme-color", content: "#1A1035" },
       { title: "ANIMA HATCH — 나를 부화시키는 픽셀 여정" },
-      { name: "description", content: "카드를 스와이프해 내 강점을 모으고, 알을 부화시켜 나만의 RPG 클래스를 얻는 픽셀 판타지 성격 진단." },
+      { name: "description", content: "카드를 스와이프해 나의 강점을 모으고, 알을 부화시켜 나만의 RPG 클래스를 얻어보세요." },
       { property: "og:title", content: "ANIMA HATCH — 나를 부화시키는 픽셀 여정" },
-      { property: "og:description", content: "픽셀 판타지 세계에서 카드로 나의 강점을 찾고 RPG 클래스로 부화시켜보세요." },
+      { property: "og:description", content: "카드를 스와이프해 나의 강점을 모으고, 알을 부화시켜 나만의 RPG 클래스를 얻어보세요." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
+      { name: "twitter:title", content: "ANIMA HATCH — 나를 부화시키는 픽셀 여정" },
+      { name: "twitter:description", content: "카드를 스와이프해 나의 강점을 모으고, 알을 부화시켜 나만의 RPG 클래스를 얻어보세요." },
+      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/71d79d79-e13c-4584-bfd2-38f8082068e9/id-preview-f0364d1e--f28f5660-9e0e-4f21-b232-765196bfc303.lovable.app-1785668466644.png" },
+      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/71d79d79-e13c-4584-bfd2-38f8082068e9/id-preview-f0364d1e--f28f5660-9e0e-4f21-b232-765196bfc303.lovable.app-1785668466644.png" },
     ],
     links: [
       {

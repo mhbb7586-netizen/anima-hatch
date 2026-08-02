@@ -10,8 +10,8 @@ export const Route = createFileRoute("/")({
     meta: [
       { title: "ANIMA HATCH — 나를 부화시키는 픽셀 여정" },
       { name: "description", content: "카드를 스와이프해 나의 강점을 모으고, 알을 부화시켜 나만의 RPG 클래스를 얻어보세요." },
-      { property: "og:title", content: "ANIMA HATCH" },
-      { property: "og:description", content: "픽셀 판타지 속에서 나를 부화시키는 여정" },
+      { property: "og:title", content: "ANIMA HATCH — 나를 부화시키는 픽셀 여정" },
+      { property: "og:description", content: "카드를 스와이프해 나의 강점을 모으고, 알을 부화시켜 나만의 RPG 클래스를 얻어보세요." },
     ],
   }),
   component: Landing,
