@@ -95,7 +95,7 @@ function Landing() {
         <div className="mt-6 grid grid-cols-3 gap-2 w-full max-w-[340px]">
           <MiniStep to="/tutorial" icon="book" label="강점 선택" />
           <MiniStep to="/invite" icon="heart" label="친구 초대" />
-          <MiniStep to="/character" icon="ghost" label="캐릭터 도감" />
+          <MiniStep to="/result" icon="ghost" label="내 결과" />
         </div>
       </div>
     </AppShell>
