@@ -14,13 +14,77 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      peer_answers: {
+        Row: {
+          created_at: string
+          id: string
+          name: string
+          picks: string[]
+          session_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          name?: string
+          picks?: string[]
+          session_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          name?: string
+          picks?: string[]
+          session_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "peer_answers_session_id_fkey"
+            columns: ["session_id"]
+            isOneToOne: false
+            referencedRelation: "sessions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      sessions: {
+        Row: {
+          character_id: string
+          created_at: string
+          id: string
+          nickname: string
+          self_picks: string[]
+        }
+        Insert: {
+          character_id?: string
+          created_at?: string
+          id?: string
+          nickname?: string
+          self_picks?: string[]
+        }
+        Update: {
+          character_id?: string
+          created_at?: string
+          id?: string
+          nickname?: string
+          self_picks?: string[]
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      add_peer_answer: {
+        Args: { p_name: string; p_picks: string[]; p_session_id: string }
+        Returns: boolean
+      }
+      create_session: {
+        Args: { p_character_id: string; p_nickname: string; p_picks: string[] }
+        Returns: string
+      }
+      get_global_stats: { Args: never; Returns: Json }
+      get_session: { Args: { p_session_id: string }; Returns: Json }
     }
     Enums: {
       [_ in never]: never
