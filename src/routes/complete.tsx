@@ -32,7 +32,7 @@ function CompletePage() {
     .slice(0, 8);
 
   return (
-    <AppShell title="선택 완료" showNav={false}>
+    <AppShell title="선택 완료">
       <div className="pt-4 pb-6 max-w-[360px] mx-auto space-y-4">
         <PixelFrame className="p-5 text-center">
           <PixelIcon name="star" size={40} color={topStatInfo.color} className="animate-glow-pulse" />

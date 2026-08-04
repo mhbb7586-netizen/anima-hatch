@@ -24,7 +24,7 @@ export const Route = createFileRoute("/friend/complete")({
 function FriendComplete() {
   const search = useSearch({ from: "/friend/complete" });
   return (
-    <AppShell hideHeader showNav={false}>
+    <AppShell hideHeader>
       <div className="pt-16 pb-10 max-w-[340px] mx-auto text-center space-y-5">
         <div className="animate-float-slow">
           <PixelIcon name="heart" size={80} color="var(--creativity)" />

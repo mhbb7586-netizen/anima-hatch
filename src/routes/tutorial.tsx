@@ -20,7 +20,7 @@ export const Route = createFileRoute("/tutorial")({
 function Tutorial() {
   const navigate = useNavigate();
   return (
-    <AppShell title="여정 안내" back="/profile" showNav={false}>
+    <AppShell title="여정 안내" back="/profile">
       <div className="pt-4 pb-6 max-w-[360px] mx-auto space-y-4">
         <PixelFrame className="p-5">
           <div className="text-center text-[16px] text-[var(--purple-glow)]">강점 카드를 만나요</div>
