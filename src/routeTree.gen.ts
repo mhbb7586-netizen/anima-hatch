@@ -14,15 +14,12 @@ import { Route as TutorialRouteImport } from './routes/tutorial'
 import { Route as SwipeRouteImport } from './routes/swipe'
 import { Route as ResultRouteImport } from './routes/result'
 import { Route as ProfileRouteImport } from './routes/profile'
-import { Route as MypageRouteImport } from './routes/mypage'
 import { Route as InviteRouteImport } from './routes/invite'
 import { Route as HatchRouteImport } from './routes/hatch'
 import { Route as FriendRouteImport } from './routes/friend'
 import { Route as CompleteRouteImport } from './routes/complete'
-import { Route as CharacterRouteImport } from './routes/character'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as FriendIndexRouteImport } from './routes/friend.index'
-import { Route as FriendTutorialRouteImport } from './routes/friend.tutorial'
 import { Route as FriendSwipeRouteImport } from './routes/friend.swipe'
 import { Route as FriendCompleteRouteImport } from './routes/friend.complete'
 
@@ -51,11 +48,6 @@ const ProfileRoute = ProfileRouteImport.update({
   path: '/profile',
   getParentRoute: () => rootRouteImport,
 } as any)
-const MypageRoute = MypageRouteImport.update({
-  id: '/mypage',
-  path: '/mypage',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const InviteRoute = InviteRouteImport.update({
   id: '/invite',
   path: '/invite',
@@ -76,11 +68,6 @@ const CompleteRoute = CompleteRouteImport.update({
   path: '/complete',
   getParentRoute: () => rootRouteImport,
 } as any)
-const CharacterRoute = CharacterRouteImport.update({
-  id: '/character',
-  path: '/character',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -89,11 +76,6 @@ const IndexRoute = IndexRouteImport.update({
 const FriendIndexRoute = FriendIndexRouteImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => FriendRoute,
-} as any)
-const FriendTutorialRoute = FriendTutorialRouteImport.update({
-  id: '/tutorial',
-  path: '/tutorial',
   getParentRoute: () => FriendRoute,
 } as any)
 const FriendSwipeRoute = FriendSwipeRouteImport.update({
@@ -109,12 +91,10 @@ const FriendCompleteRoute = FriendCompleteRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/character': typeof CharacterRoute
   '/complete': typeof CompleteRoute
   '/friend': typeof FriendRouteWithChildren
   '/hatch': typeof HatchRoute
   '/invite': typeof InviteRoute
-  '/mypage': typeof MypageRoute
   '/profile': typeof ProfileRoute
   '/result': typeof ResultRoute
   '/swipe': typeof SwipeRoute
@@ -122,16 +102,13 @@ export interface FileRoutesByFullPath {
   '/waiting': typeof WaitingRoute
   '/friend/complete': typeof FriendCompleteRoute
   '/friend/swipe': typeof FriendSwipeRoute
-  '/friend/tutorial': typeof FriendTutorialRoute
   '/friend/': typeof FriendIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/character': typeof CharacterRoute
   '/complete': typeof CompleteRoute
   '/hatch': typeof HatchRoute
   '/invite': typeof InviteRoute
-  '/mypage': typeof MypageRoute
   '/profile': typeof ProfileRoute
   '/result': typeof ResultRoute
   '/swipe': typeof SwipeRoute
@@ -139,18 +116,15 @@ export interface FileRoutesByTo {
   '/waiting': typeof WaitingRoute
   '/friend/complete': typeof FriendCompleteRoute
   '/friend/swipe': typeof FriendSwipeRoute
-  '/friend/tutorial': typeof FriendTutorialRoute
   '/friend': typeof FriendIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/character': typeof CharacterRoute
   '/complete': typeof CompleteRoute
   '/friend': typeof FriendRouteWithChildren
   '/hatch': typeof HatchRoute
   '/invite': typeof InviteRoute
-  '/mypage': typeof MypageRoute
   '/profile': typeof ProfileRoute
   '/result': typeof ResultRoute
   '/swipe': typeof SwipeRoute
@@ -158,19 +132,16 @@ export interface FileRoutesById {
   '/waiting': typeof WaitingRoute
   '/friend/complete': typeof FriendCompleteRoute
   '/friend/swipe': typeof FriendSwipeRoute
-  '/friend/tutorial': typeof FriendTutorialRoute
   '/friend/': typeof FriendIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
-    | '/character'
     | '/complete'
     | '/friend'
     | '/hatch'
     | '/invite'
-    | '/mypage'
     | '/profile'
     | '/result'
     | '/swipe'
@@ -178,16 +149,13 @@ export interface FileRouteTypes {
     | '/waiting'
     | '/friend/complete'
     | '/friend/swipe'
-    | '/friend/tutorial'
     | '/friend/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
-    | '/character'
     | '/complete'
     | '/hatch'
     | '/invite'
-    | '/mypage'
     | '/profile'
     | '/result'
     | '/swipe'
@@ -195,17 +163,14 @@ export interface FileRouteTypes {
     | '/waiting'
     | '/friend/complete'
     | '/friend/swipe'
-    | '/friend/tutorial'
     | '/friend'
   id:
     | '__root__'
     | '/'
-    | '/character'
     | '/complete'
     | '/friend'
     | '/hatch'
     | '/invite'
-    | '/mypage'
     | '/profile'
     | '/result'
     | '/swipe'
@@ -213,18 +178,15 @@ export interface FileRouteTypes {
     | '/waiting'
     | '/friend/complete'
     | '/friend/swipe'
-    | '/friend/tutorial'
     | '/friend/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  CharacterRoute: typeof CharacterRoute
   CompleteRoute: typeof CompleteRoute
   FriendRoute: typeof FriendRouteWithChildren
   HatchRoute: typeof HatchRoute
   InviteRoute: typeof InviteRoute
-  MypageRoute: typeof MypageRoute
   ProfileRoute: typeof ProfileRoute
   ResultRoute: typeof ResultRoute
   SwipeRoute: typeof SwipeRoute
@@ -269,13 +231,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProfileRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/mypage': {
-      id: '/mypage'
-      path: '/mypage'
-      fullPath: '/mypage'
-      preLoaderRoute: typeof MypageRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/invite': {
       id: '/invite'
       path: '/invite'
@@ -304,13 +259,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CompleteRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/character': {
-      id: '/character'
-      path: '/character'
-      fullPath: '/character'
-      preLoaderRoute: typeof CharacterRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/': {
       id: '/'
       path: '/'
@@ -323,13 +271,6 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/friend/'
       preLoaderRoute: typeof FriendIndexRouteImport
-      parentRoute: typeof FriendRoute
-    }
-    '/friend/tutorial': {
-      id: '/friend/tutorial'
-      path: '/tutorial'
-      fullPath: '/friend/tutorial'
-      preLoaderRoute: typeof FriendTutorialRouteImport
       parentRoute: typeof FriendRoute
     }
     '/friend/swipe': {
@@ -352,14 +293,12 @@ declare module '@tanstack/react-router' {
 interface FriendRouteChildren {
   FriendCompleteRoute: typeof FriendCompleteRoute
   FriendSwipeRoute: typeof FriendSwipeRoute
-  FriendTutorialRoute: typeof FriendTutorialRoute
   FriendIndexRoute: typeof FriendIndexRoute
 }
 
 const FriendRouteChildren: FriendRouteChildren = {
   FriendCompleteRoute: FriendCompleteRoute,
   FriendSwipeRoute: FriendSwipeRoute,
-  FriendTutorialRoute: FriendTutorialRoute,
   FriendIndexRoute: FriendIndexRoute,
 }
 
@@ -368,12 +307,10 @@ const FriendRouteWithChildren =
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  CharacterRoute: CharacterRoute,
   CompleteRoute: CompleteRoute,
   FriendRoute: FriendRouteWithChildren,
   HatchRoute: HatchRoute,
   InviteRoute: InviteRoute,
-  MypageRoute: MypageRoute,
   ProfileRoute: ProfileRoute,
   ResultRoute: ResultRoute,
   SwipeRoute: SwipeRoute,
