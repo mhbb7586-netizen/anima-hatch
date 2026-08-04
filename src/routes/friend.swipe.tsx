@@ -1,15 +1,14 @@
 import { createFileRoute, useNavigate, useSearch } from "@tanstack/react-router";
+import { useState } from "react";
 import { AppShell } from "@/components/pixel/AppShell";
-import { SwipeDeck } from "@/components/pixel/SwipeDeck";
-import { PixelProgressBar } from "@/components/pixel/PixelBars";
-import { CARDS } from "@/lib/game/data";
-import { setState, getState } from "@/lib/game/store";
-import { useMemo, useState } from "react";
+import { SwipeFlow } from "@/components/pixel/SwipeFlow";
+import { addPeerAnswer } from "@/lib/game/api";
 
-type Search = { from?: string; name?: string };
+type Search = { s?: string; from?: string; name?: string };
 
 export const Route = createFileRoute("/friend/swipe")({
   validateSearch: (s: Record<string, unknown>): Search => ({
+    s: typeof s.s === "string" ? s.s : undefined,
     from: typeof s.from === "string" ? s.from : undefined,
     name: typeof s.name === "string" ? s.name : undefined,
   }),
@@ -27,38 +26,31 @@ export const Route = createFileRoute("/friend/swipe")({
 function FriendSwipe() {
   const search = useSearch({ from: "/friend/swipe" });
   const navigate = useNavigate();
-  const cards = useMemo(() => CARDS, []);
-  const [i, setI] = useState(0);
-  const [picks, setPicks] = useState<string[]>([]);
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  function handle(card: { id: string }, choice: "yes" | "no") {
-    const nextPicks = choice === "yes" ? [...picks, card.id] : picks;
-    setPicks(nextPicks);
-    const ni = i + 1;
-    if (ni >= cards.length) {
-      const cur = getState();
-      const friendName = search.name || `사람${cur.friends.length + 1}`;
-      setState({ friends: [...cur.friends, { name: friendName, picks: nextPicks }] });
-      navigate({ to: "/friend/complete", search });
+  async function finish(picks: string[]) {
+    if (busy) return;
+    if (!search.s) { setError("초대 링크가 올바르지 않아요."); return; }
+    setBusy(true);
+    setError(null);
+    try {
+      await addPeerAnswer(search.s, search.name || "친구", picks);
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "전송에 실패했어요");
+      setBusy(false);
       return;
     }
-    setI(ni);
+    navigate({ to: "/friend/complete", search });
   }
 
   return (
-    <AppShell title={`${search.from || "친구"}의 강점 찾기`} showNav={false}>
-      <div className="pt-2 pb-6">
-        <PixelProgressBar value={i + 1} total={cards.length} />
-        <div className="mt-2 text-center text-[12px] text-[var(--fg)]/70">
-          {i + 1} / {cards.length}
-        </div>
-        <div className="mt-2">
-          <SwipeDeck cards={cards} index={i} onChoose={handle} />
-        </div>
-        <div className="mt-6 text-center text-[10px] text-[var(--fg)]/60">
-          ◂ 카드를 좌우로 스와이프하세요 ▸
-        </div>
-      </div>
+    <AppShell title={`${search.from || "친구"}의 강점 찾기`}>
+      <SwipeFlow
+        onFinish={finish}
+        busy={busy}
+        footer={error ? <div className="mt-3 text-center text-[11px] text-[var(--danger)]">{error}</div> : null}
+      />
     </AppShell>
   );
 }
