@@ -13,18 +13,28 @@ export type StatKey =
   | "temperance"
   | "transcendence";
 
-export const STATS: Record<StatKey, { label: string; color: string; icon: string }> = {
-  wisdom:      { label: "지혜",   color: "var(--wisdom)",     icon: "book" },
-  courage:     { label: "용기",   color: "var(--courage)",    icon: "sword" },
-  humanity:    { label: "인간애", color: "var(--humanity)",   icon: "leaf" },
-  justice:     { label: "정의",   color: "var(--justice)",    icon: "shield" },
-  temperance:  { label: "절제",   color: "var(--temperance)", icon: "hourglass" },
-  transcendence: { label: "초월", color: "var(--creativity)", icon: "star" },
+export const STATS: Record<StatKey, { label: string; color: string; hex: string; icon: string }> = {
+  wisdom:      { label: "지혜",   color: "var(--wisdom)",     hex: "#a855f7", icon: "book" },
+  courage:     { label: "용기",   color: "var(--courage)",    hex: "#f97316", icon: "sword" },
+  humanity:    { label: "인간애", color: "var(--humanity)",   hex: "#4ade80", icon: "leaf" },
+  justice:     { label: "정의",   color: "var(--justice)",    hex: "#fbbf24", icon: "shield" },
+  temperance:  { label: "절제",   color: "var(--temperance)", hex: "#93c5fd", icon: "hourglass" },
+  transcendence: { label: "초월", color: "var(--creativity)", hex: "#f472b6", icon: "star" },
 };
+
+/** Fixed evaluation order — also the deterministic tie-break order for the top virtue. */
+export const STAT_KEYS: StatKey[] = [
+  "wisdom", "courage", "humanity", "justice", "temperance", "transcendence",
+];
 
 export const STAT_ORDER: StatKey[] = [
   "humanity", "transcendence", "wisdom", "justice", "courage", "temperance",
 ];
+
+/** Selection limits — identical for the user and for friends. */
+export const MIN_PICKS = 5;
+export const MAX_PICKS = 15;
+
 
 export type Card = {
   id: string;
