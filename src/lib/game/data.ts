@@ -130,20 +130,48 @@ export const CHAR_BY_STAT: Record<StatKey, CharacterClass> = Object.fromEntries(
   CHARACTERS.map((c) => [c.stat, c])
 ) as Record<StatKey, CharacterClass>;
 
-export function computeStats(cardIds: string[]): Record<StatKey, number> {
-  const counts: Record<StatKey, number> = {
-    wisdom: 0, courage: 0, humanity: 0, justice: 0, temperance: 0, transcendence: 0,
-  };
-  for (const id of cardIds) {
-    const card = CARDS.find((c) => c.id === id);
-    if (card) counts[card.stat]++;
-  }
-  const total = Object.values(counts).reduce((a, b) => a + b, 0) || 1;
-  return Object.fromEntries(
-    Object.entries(counts).map(([k, v]) => [k, Math.round((v / total) * 100)])
-  ) as Record<StatKey, number>;
+export const CHAR_BY_ID: Record<string, CharacterClass> = Object.fromEntries(
+  CHARACTERS.map((c) => [c.id, c])
+);
+
+export const CARD_BY_ID: Record<string, Card> = Object.fromEntries(
+  CARDS.map((c) => [c.id, c])
+);
+
+function emptyCounts(): Record<StatKey, number> {
+  return { wisdom: 0, courage: 0, humanity: 0, justice: 0, temperance: 0, transcendence: 0 };
 }
 
-export function topStat(stats: Record<StatKey, number>): StatKey {
-  return (Object.entries(stats).sort((a, b) => b[1] - a[1])[0]?.[0] as StatKey) ?? "wisdom";
+/** Raw number of selected cards per virtue. Unknown ids are ignored. */
+export function countByStat(cardIds: string[]): Record<StatKey, number> {
+  const counts = emptyCounts();
+  for (const id of cardIds) {
+    const card = CARD_BY_ID[id];
+    if (card) counts[card.stat]++;
+  }
+  return counts;
 }
+
+/** Percentage share per virtue (rounded). */
+export function computeStats(cardIds: string[]): Record<StatKey, number> {
+  const counts = countByStat(cardIds);
+  const total = STAT_KEYS.reduce((a, k) => a + counts[k], 0) || 1;
+  const out = emptyCounts();
+  for (const k of STAT_KEYS) out[k] = Math.round((counts[k] / total) * 100);
+  return out;
+}
+
+/** Highest-scoring virtue. Ties break deterministically along STAT_KEYS. */
+export function topStat(stats: Record<StatKey, number>): StatKey {
+  let best: StatKey = STAT_KEYS[0]!;
+  for (const k of STAT_KEYS) {
+    if (stats[k] > stats[best]) best = k;
+  }
+  return best;
+}
+
+/** The single character unlocked by a set of self-selected cards. */
+export function characterFor(cardIds: string[]): CharacterClass {
+  return CHAR_BY_STAT[topStat(countByStat(cardIds))];
+}
+
