@@ -95,19 +95,20 @@ export function SwipeDeck({ cards, index, onChoose }: Props) {
             }}
           >
             <CardShell card={current} />
-            {/* choice hint overlays */}
+            {/* choice hint overlays — drawn as pixel icons so no font glyph is needed */}
             <div
               className="absolute inset-0 pointer-events-none flex items-center justify-center"
               style={{ opacity: drag && drag.dx > 0 ? opacityHint : 0 }}
             >
-              <div className="text-[80px] text-[var(--humanity)]" style={{ textShadow: "3px 3px 0 #0a0416" }}>O</div>
+              <PixelIcon name="circle" size={96} color="var(--humanity)" />
             </div>
             <div
               className="absolute inset-0 pointer-events-none flex items-center justify-center"
               style={{ opacity: drag && drag.dx < 0 ? opacityHint : 0 }}
             >
-              <div className="text-[80px] text-[var(--danger)]" style={{ textShadow: "3px 3px 0 #0a0416" }}>X</div>
+              <PixelIcon name="x" size={96} color="var(--danger)" />
             </div>
+
           </div>
         )}
       </div>

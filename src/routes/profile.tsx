@@ -24,7 +24,7 @@ function Profile() {
   const [name, setName] = useState(game.nickname);
   const navigate = useNavigate();
   return (
-    <AppShell title="모험가 등록" back="/" showNav={false}>
+    <AppShell title="모험가 등록" back="/">
       <div className="pt-6 pb-8 max-w-[340px] mx-auto">
         <PixelFrame className="p-6 flex flex-col items-center">
           <PixelIcon name="mask" size={64} className="text-[var(--purple-glow)] animate-glow-pulse" />

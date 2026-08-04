@@ -5,40 +5,57 @@ import { PixelFrame } from "@/components/pixel/PixelFrame";
 import { PixelButton } from "@/components/pixel/PixelButton";
 import { PixelInput } from "@/components/pixel/PixelInput";
 import { PixelIcon } from "@/components/pixel/PixelIcon";
+import { CARDS, MAX_PICKS, MIN_PICKS } from "@/lib/game/data";
 
-type Search = { from?: string; name?: string };
+type Search = { s?: string; from?: string };
 
 export const Route = createFileRoute("/friend/")({
   head: () => ({
     meta: [
-      { title: "친구 초대 · ANIMA HATCH" },
-      { name: "description", content: "친구의 강점을 골라주세요." },
-      { property: "og:title", content: "친구 여정" },
-      { property: "og:description", content: "친구의 강점을 골라주세요." },
+      { title: "친구 강점 골라주기 · ANIMA HATCH" },
+      { name: "description", content: "친구의 눈에 비친 강점을 골라주세요." },
+      { property: "og:title", content: "친구 강점 골라주기" },
+      { property: "og:description", content: "친구의 눈에 비친 강점을 골라주세요." },
     ],
   }),
   validateSearch: (s: Record<string, unknown>): Search => ({
+    s: typeof s.s === "string" ? s.s : undefined,
     from: typeof s.from === "string" ? s.from : undefined,
-    name: typeof s.name === "string" ? s.name : undefined,
   }),
   component: FriendLanding,
 });
 
 function FriendLanding() {
-  const { from } = useSearch({ from: "/friend/" });
+  const { s, from } = useSearch({ from: "/friend/" });
   const [name, setName] = useState("");
   const navigate = useNavigate();
+
+  if (!s) {
+    return (
+      <AppShell hideHeader>
+        <div className="pt-10 max-w-[340px] mx-auto">
+          <PixelFrame className="p-6 text-center">
+            <PixelIcon name="skull" size={44} color="var(--danger)" className="mx-auto" />
+            <div className="mt-3 text-[14px] text-[var(--danger)]">링크가 올바르지 않아요</div>
+            <p className="mt-2 text-[11px] text-[var(--fg)]/70">친구에게 초대 링크를 다시 받아주세요.</p>
+          </PixelFrame>
+        </div>
+      </AppShell>
+    );
+  }
+
   return (
-    <AppShell hideHeader showNav={false}>
-      <div className="pt-8 pb-6 max-w-[340px] mx-auto">
+    <AppShell hideHeader>
+      <div className="pt-6 pb-6 max-w-[340px] mx-auto">
         <PixelFrame className="p-6 text-center">
           <PixelIcon name="heart" size={44} color="var(--creativity)" className="mx-auto animate-glow-pulse" />
           <div className="mt-3 text-[16px] text-[var(--purple-glow)]">
             {from || "친구"}의 강점을<br />골라주세요
           </div>
           <p className="mt-3 text-[11px] text-[var(--fg)]/75 leading-relaxed">
-            당신 눈에 비친 모습이<br />
-            {from || "친구"}의 알을 부화시키는 열쇠예요.
+            총 {CARDS.length}장의 카드 중<br />
+            {MIN_PICKS}~{MAX_PICKS}개를 골라주면 돼요.<br />
+            당신 눈에 비친 모습이 알을 부화시켜요.
           </p>
 
           <div className="mt-6 text-left">
@@ -55,7 +72,7 @@ function FriendLanding() {
           <PixelButton
             full size="lg"
             disabled={name.trim().length < 1}
-            onClick={() => navigate({ to: "/friend/tutorial", search: { from, name: name.trim() } })}
+            onClick={() => navigate({ to: "/friend/swipe", search: { s, from, name: name.trim() } })}
             rightIcon={<PixelIcon name="arrow" size={14} />}
           >
             시작하기

@@ -3,9 +3,9 @@ import { AppShell } from "@/components/pixel/AppShell";
 import { PixelFrame } from "@/components/pixel/PixelFrame";
 import { PixelButton } from "@/components/pixel/PixelButton";
 import { PixelIcon } from "@/components/pixel/PixelIcon";
-import { CHAR_BY_STAT, computeStats, topStat } from "@/lib/game/data";
+import { characterFor } from "@/lib/game/data";
 import { setState, useGame } from "@/lib/game/store";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 export const Route = createFileRoute("/hatch")({
   head: () => ({
@@ -24,29 +24,24 @@ function HatchPage() {
   const navigate = useNavigate();
   const [phase, setPhase] = useState<"shake" | "flash" | "reveal">("shake");
 
+  // The unlocked class comes from the user's OWN selections only.
+  const character = useMemo(() => characterFor(game.myPicks), [game.myPicks]);
+
   useEffect(() => {
-    const stats = computeStats([...game.myPicks, ...game.friends.flatMap((f) => f.picks)]);
-    const top = topStat(stats);
-    const character = CHAR_BY_STAT[top];
     const t1 = setTimeout(() => setPhase("flash"), 2000);
     const t2 = setTimeout(() => setPhase("reveal"), 3200);
     const t3 = setTimeout(() => {
-      setState({ hatched: true, unlockedCharacterId: character.id });
+      setState({ hatched: true });
       navigate({ to: "/result" });
     }, 4200);
     return () => { clearTimeout(t1); clearTimeout(t2); clearTimeout(t3); };
-  }, [game.friends, game.myPicks, navigate]);
-
-  const stats = computeStats([...game.myPicks, ...game.friends.flatMap((f) => f.picks)]);
-  const top = topStat(stats);
-  const character = CHAR_BY_STAT[top];
+  }, [navigate]);
 
   return (
-    <AppShell hideHeader showNav={false}>
-      <div className="pt-6 pb-6 flex flex-col items-center gap-4">
+    <AppShell hideHeader>
+      <div className="pt-2 pb-6 flex flex-col items-center gap-4">
         <div className="text-[16px] text-[var(--purple-glow)]">알이 깨어나요...</div>
         <div className="relative w-[300px] h-[300px] flex items-center justify-center">
-          {/* magic circle base */}
           <div
             className="absolute bottom-4 w-[260px] h-[70px] animate-spin-slow"
             style={{
@@ -57,7 +52,6 @@ function HatchPage() {
               filter: "drop-shadow(0 0 16px var(--purple))",
             }}
           />
-          {/* egg or character */}
           {phase !== "reveal" ? (
             <div className={phase === "shake" ? "animate-egg-shake" : ""}>
               <PixelIcon name="egg" size={180} />
@@ -70,17 +64,15 @@ function HatchPage() {
               style={{ height: 200, imageRendering: "pixelated", filter: "drop-shadow(0 0 20px var(--purple-glow))" }}
             />
           )}
-          {/* flash overlay */}
           {phase === "flash" && (
             <div className="absolute inset-0 animate-hatch-flash pointer-events-none"
               style={{ background: "radial-gradient(circle, #ffffff 0%, transparent 60%)" }} />
           )}
-          {/* sparkles */}
           {Array.from({ length: 10 }).map((_, i) => (
             <div key={i} className="absolute w-[4px] h-[4px] animate-sparkle"
               style={{
-                left: `${20 + Math.random() * 60}%`,
-                top: `${20 + Math.random() * 60}%`,
+                left: `${20 + ((i * 37) % 60)}%`,
+                top: `${20 + ((i * 53) % 60)}%`,
                 background: "var(--purple-glow)",
                 boxShadow: "0 0 6px var(--purple-glow)",
                 animationDelay: `${i * 0.2}s`,

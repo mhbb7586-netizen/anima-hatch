@@ -13,18 +13,28 @@ export type StatKey =
   | "temperance"
   | "transcendence";
 
-export const STATS: Record<StatKey, { label: string; color: string; icon: string }> = {
-  wisdom:      { label: "지혜",   color: "var(--wisdom)",     icon: "book" },
-  courage:     { label: "용기",   color: "var(--courage)",    icon: "sword" },
-  humanity:    { label: "인간애", color: "var(--humanity)",   icon: "leaf" },
-  justice:     { label: "정의",   color: "var(--justice)",    icon: "shield" },
-  temperance:  { label: "절제",   color: "var(--temperance)", icon: "hourglass" },
-  transcendence: { label: "초월", color: "var(--creativity)", icon: "star" },
+export const STATS: Record<StatKey, { label: string; color: string; hex: string; icon: string }> = {
+  wisdom:      { label: "지혜",   color: "var(--wisdom)",     hex: "#a855f7", icon: "book" },
+  courage:     { label: "용기",   color: "var(--courage)",    hex: "#f97316", icon: "sword" },
+  humanity:    { label: "인간애", color: "var(--humanity)",   hex: "#4ade80", icon: "leaf" },
+  justice:     { label: "정의",   color: "var(--justice)",    hex: "#fbbf24", icon: "shield" },
+  temperance:  { label: "절제",   color: "var(--temperance)", hex: "#93c5fd", icon: "hourglass" },
+  transcendence: { label: "초월", color: "var(--creativity)", hex: "#f472b6", icon: "star" },
 };
+
+/** Fixed evaluation order — also the deterministic tie-break order for the top virtue. */
+export const STAT_KEYS: StatKey[] = [
+  "wisdom", "courage", "humanity", "justice", "temperance", "transcendence",
+];
 
 export const STAT_ORDER: StatKey[] = [
   "humanity", "transcendence", "wisdom", "justice", "courage", "temperance",
 ];
+
+/** Selection limits — identical for the user and for friends. */
+export const MIN_PICKS = 5;
+export const MAX_PICKS = 15;
+
 
 export type Card = {
   id: string;
@@ -120,20 +130,48 @@ export const CHAR_BY_STAT: Record<StatKey, CharacterClass> = Object.fromEntries(
   CHARACTERS.map((c) => [c.stat, c])
 ) as Record<StatKey, CharacterClass>;
 
-export function computeStats(cardIds: string[]): Record<StatKey, number> {
-  const counts: Record<StatKey, number> = {
-    wisdom: 0, courage: 0, humanity: 0, justice: 0, temperance: 0, transcendence: 0,
-  };
-  for (const id of cardIds) {
-    const card = CARDS.find((c) => c.id === id);
-    if (card) counts[card.stat]++;
-  }
-  const total = Object.values(counts).reduce((a, b) => a + b, 0) || 1;
-  return Object.fromEntries(
-    Object.entries(counts).map(([k, v]) => [k, Math.round((v / total) * 100)])
-  ) as Record<StatKey, number>;
+export const CHAR_BY_ID: Record<string, CharacterClass> = Object.fromEntries(
+  CHARACTERS.map((c) => [c.id, c])
+);
+
+export const CARD_BY_ID: Record<string, Card> = Object.fromEntries(
+  CARDS.map((c) => [c.id, c])
+);
+
+function emptyCounts(): Record<StatKey, number> {
+  return { wisdom: 0, courage: 0, humanity: 0, justice: 0, temperance: 0, transcendence: 0 };
 }
 
-export function topStat(stats: Record<StatKey, number>): StatKey {
-  return (Object.entries(stats).sort((a, b) => b[1] - a[1])[0]?.[0] as StatKey) ?? "wisdom";
+/** Raw number of selected cards per virtue. Unknown ids are ignored. */
+export function countByStat(cardIds: string[]): Record<StatKey, number> {
+  const counts = emptyCounts();
+  for (const id of cardIds) {
+    const card = CARD_BY_ID[id];
+    if (card) counts[card.stat]++;
+  }
+  return counts;
 }
+
+/** Percentage share per virtue (rounded). */
+export function computeStats(cardIds: string[]): Record<StatKey, number> {
+  const counts = countByStat(cardIds);
+  const total = STAT_KEYS.reduce((a, k) => a + counts[k], 0) || 1;
+  const out = emptyCounts();
+  for (const k of STAT_KEYS) out[k] = Math.round((counts[k] / total) * 100);
+  return out;
+}
+
+/** Highest-scoring virtue. Ties break deterministically along STAT_KEYS. */
+export function topStat(stats: Record<StatKey, number>): StatKey {
+  let best: StatKey = STAT_KEYS[0]!;
+  for (const k of STAT_KEYS) {
+    if (stats[k] > stats[best]) best = k;
+  }
+  return best;
+}
+
+/** The single character unlocked by a set of self-selected cards. */
+export function characterFor(cardIds: string[]): CharacterClass {
+  return CHAR_BY_STAT[topStat(countByStat(cardIds))];
+}
+

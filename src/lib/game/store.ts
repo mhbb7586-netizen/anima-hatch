@@ -2,20 +2,20 @@ import { useSyncExternalStore } from "react";
 
 export type GameState = {
   nickname: string;
-  myPicks: string[];             // selected card ids
-  friends: { name: string; picks: string[] }[];
+  /** Card ids the user selected for themselves, in selection order. */
+  myPicks: string[];
+  /** Server session id — the shareable identity of this result. */
+  sessionId: string | null;
   hatched: boolean;
-  unlockedCharacterId: string | null;
 };
 
-const KEY = "anima-hatch-state-v1";
+const KEY = "anima-hatch-state-v2";
 
 const defaultState: GameState = {
   nickname: "",
   myPicks: [],
-  friends: [],
+  sessionId: null,
   hatched: false,
-  unlockedCharacterId: null,
 };
 
 let state: GameState = load();

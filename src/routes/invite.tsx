@@ -22,25 +22,25 @@ function Invite() {
   const game = useGame();
   const navigate = useNavigate();
   const [copied, setCopied] = useState(false);
-  const link = typeof window !== "undefined"
-    ? `${window.location.origin}/friend?from=${encodeURIComponent(game.nickname || "친구")}`
-    : "/friend";
+
+  const link = typeof window !== "undefined" && game.sessionId
+    ? `${window.location.origin}/friend?s=${game.sessionId}&from=${encodeURIComponent(game.nickname || "친구")}`
+    : "";
 
   async function copy() {
+    if (!link) return;
     try {
       await navigator.clipboard.writeText(link);
       setCopied(true);
       setTimeout(() => setCopied(false), 1600);
-    } catch {
-      /* noop */
-    }
+    } catch { /* noop */ }
   }
 
   return (
-    <AppShell title="친구 초대" back="/complete" showNav={false}>
+    <AppShell title="친구 초대" back="/complete">
       <div className="pt-4 pb-6 max-w-[360px] mx-auto space-y-4">
         <PixelFrame className="p-5 text-center">
-          <PixelIcon name="heart" size={44} color="var(--creativity)" className="animate-glow-pulse" />
+          <PixelIcon name="heart" size={44} color="var(--creativity)" className="mx-auto animate-glow-pulse" />
           <div className="mt-2 text-[15px] text-[var(--purple-glow)]">3명의 눈이 필요해요</div>
           <p className="mt-2 text-[11px] text-[var(--fg)]/75 leading-relaxed">
             친구가 답할수록<br />
@@ -52,31 +52,30 @@ function Invite() {
           <div className="text-[11px] text-[var(--fg)]/70 mb-2">공유 링크</div>
           <div
             className="text-[11px] p-3 break-all"
-            style={{
-              background: "#0a0416",
-              boxShadow: "inset 0 0 0 2px var(--pixel-border-dark)",
-            }}
+            style={{ background: "#0a0416", boxShadow: "inset 0 0 0 2px var(--pixel-border-dark)" }}
           >
-            {link}
+            {link || "링크를 만드는 중..."}
           </div>
           <div className="mt-3 grid grid-cols-2 gap-2">
-            <PixelButton size="md" variant="ghost" onClick={copy}>
+            <PixelButton size="md" variant="ghost" disabled={!link} onClick={copy}>
               {copied ? "복사됨!" : "링크 복사"}
             </PixelButton>
-            <PixelButton size="md" onClick={() => {
+            <PixelButton size="md" disabled={!link} onClick={() => {
               if (navigator.share) {
-                navigator.share({ title: "ANIMA HATCH", text: `${game.nickname || "친구"}의 강점을 골라주세요!`, url: link }).catch(() => {});
-              } else {
-                copy();
-              }
+                navigator.share({
+                  title: "ANIMA HATCH",
+                  text: `${game.nickname || "친구"}의 강점을 골라주세요!`,
+                  url: link,
+                }).catch(() => {});
+              } else { copy(); }
             }}>공유하기</PixelButton>
           </div>
         </PixelFrame>
 
         <PixelFrame className="p-4" tone="mid">
-          <div className="text-[11px] leading-relaxed">
-            테스트 중이라 친구가 없나요?<br />
-            <span className="text-[var(--purple-glow)]">모의 친구</span>가 대신 답해줄 수 있어요.
+          <div className="text-[11px] leading-relaxed text-[var(--fg)]/80">
+            친구는 링크를 열어 이름을 적고, 나와 같은 54장의 카드를 스와이프해요.
+            응답은 실시간으로 내 결과에 반영돼요.
           </div>
         </PixelFrame>
 
