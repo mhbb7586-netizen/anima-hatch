@@ -22,7 +22,9 @@ export const Route = createFileRoute("/profile")({
 function Profile() {
   const game = useGame();
   const [name, setName] = useState(game.nickname);
+  const [email, setEmail] = useState(game.email);
   const navigate = useNavigate();
+  const emailOk = email.trim() === "" || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim());
   return (
     <AppShell title="모험가 등록" back="/">
       <div className="pt-6 pb-8 max-w-[340px] mx-auto">
@@ -41,15 +43,29 @@ function Profile() {
             />
             <div className="mt-1 text-right text-[10px] text-[var(--fg)]/50">{name.length}/12</div>
           </div>
+          <div className="mt-4 w-full">
+            <div className="mb-1 text-[10px] text-[var(--fg)]/60">이메일 (선택)</div>
+            <PixelInput
+              value={email}
+              onChange={(e) => setEmail(e.target.value.slice(0, 254))}
+              placeholder="alchemist@example.com"
+              inputMode="email"
+            />
+            {!emailOk && (
+              <div className="mt-1 text-[10px] text-[var(--courage)]">
+                이메일 형식을 확인해주세요
+              </div>
+            )}
+          </div>
         </PixelFrame>
 
         <div className="mt-6">
           <PixelButton
             full
             size="lg"
-            disabled={name.trim().length < 2}
+            disabled={name.trim().length < 2 || !emailOk}
             onClick={() => {
-              setState({ nickname: name.trim() });
+              setState({ nickname: name.trim(), email: email.trim() });
               navigate({ to: "/tutorial" });
             }}
             rightIcon={<PixelIcon name="arrow" size={14} />}

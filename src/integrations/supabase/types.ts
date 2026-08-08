@@ -18,22 +18,22 @@ export type Database = {
         Row: {
           created_at: string
           id: string
-          name: string
-          picks: string[]
+          keyword_ids: number[]
+          peer_nickname: string
           session_id: string
         }
         Insert: {
           created_at?: string
           id?: string
-          name?: string
-          picks?: string[]
+          keyword_ids?: number[]
+          peer_nickname?: string
           session_id: string
         }
         Update: {
           created_at?: string
           id?: string
-          name?: string
-          picks?: string[]
+          keyword_ids?: number[]
+          peer_nickname?: string
           session_id?: string
         }
         Relationships: [
@@ -46,27 +46,56 @@ export type Database = {
           },
         ]
       }
+      self_answers: {
+        Row: {
+          created_at: string
+          id: string
+          keyword_ids: number[]
+          session_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          keyword_ids?: number[]
+          session_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          keyword_ids?: number[]
+          session_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "self_answers_session_id_fkey"
+            columns: ["session_id"]
+            isOneToOne: false
+            referencedRelation: "sessions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       sessions: {
         Row: {
           character_id: string
           created_at: string
+          email: string | null
           id: string
           nickname: string
-          self_picks: string[]
         }
         Insert: {
           character_id?: string
           created_at?: string
+          email?: string | null
           id?: string
           nickname?: string
-          self_picks?: string[]
         }
         Update: {
           character_id?: string
           created_at?: string
+          email?: string | null
           id?: string
           nickname?: string
-          self_picks?: string[]
         }
         Relationships: []
       }
@@ -76,11 +105,20 @@ export type Database = {
     }
     Functions: {
       add_peer_answer: {
-        Args: { p_name: string; p_picks: string[]; p_session_id: string }
+        Args: {
+          p_keyword_ids: number[]
+          p_peer_nickname: string
+          p_session_id: string
+        }
         Returns: boolean
       }
       create_session: {
-        Args: { p_character_id: string; p_nickname: string; p_picks: string[] }
+        Args: {
+          p_character_id: string
+          p_email: string
+          p_keyword_ids: number[]
+          p_nickname: string
+        }
         Returns: string
       }
       get_global_stats: { Args: never; Returns: Json }

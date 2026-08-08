@@ -31,7 +31,7 @@ function SwipePage() {
     const character = characterFor(picks);
     setState({ myPicks: picks });
     try {
-      const id = await createSession(cur.nickname || "모험가", picks, character.id);
+      const id = await createSession(cur.nickname || "모험가", picks, character.id, cur.email);
       setState({ sessionId: id });
     } catch (e) {
       setError(e instanceof Error ? e.message : "저장에 실패했어요");

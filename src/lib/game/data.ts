@@ -138,6 +138,25 @@ export const CARD_BY_ID: Record<string, Card> = Object.fromEntries(
   CARDS.map((c) => [c.id, c])
 );
 
+/**
+ * Stable numeric keyword ids used by the database (`keyword_ids integer[]`).
+ * Derived from the fixed CARDS order — never reorder or remove entries above,
+ * only append new cards at the end.
+ */
+export const KEYWORD_NUM_BY_ID: Record<string, number> = Object.fromEntries(
+  CARDS.map((c, i) => [c.id, i + 1])
+);
+export const KEYWORD_ID_BY_NUM: Record<number, string> = Object.fromEntries(
+  CARDS.map((c, i) => [i + 1, c.id])
+);
+export function toKeywordIds(cardIds: string[]): number[] {
+  return cardIds.map((id) => KEYWORD_NUM_BY_ID[id]).filter((n): n is number => Number.isFinite(n));
+}
+export function toCardIds(keywordIds: number[]): string[] {
+  return keywordIds.map((n) => KEYWORD_ID_BY_NUM[n]).filter((id): id is string => Boolean(id));
+}
+
+
 function emptyCounts(): Record<StatKey, number> {
   return { wisdom: 0, courage: 0, humanity: 0, justice: 0, temperance: 0, transcendence: 0 };
 }
