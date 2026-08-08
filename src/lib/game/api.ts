@@ -1,12 +1,9 @@
-import { supabase } from "@/integrations/supabase/client";
-
-/** The generated types file has no RPC signatures, so call through a narrow shim. */
-const db = supabase as unknown as {
-  rpc: (
-    fn: string,
-    args?: Record<string, unknown>,
-  ) => Promise<{ data: unknown; error: { message: string } | null }>;
-};
+import {
+  addPeerAnswerFn,
+  createSessionFn,
+  getGlobalStatsFn,
+  getSessionFn,
+} from "@/lib/game/session.functions";
 
 export type PeerAnswer = { name: string; picks: string[]; created_at: string };
 
@@ -30,32 +27,18 @@ export async function createSession(
   picks: string[],
   characterId: string,
 ): Promise<string> {
-  const { data, error } = await db.rpc("create_session", {
-    p_nickname: nickname,
-    p_picks: picks,
-    p_character_id: characterId,
-  });
-  if (error) throw new Error(error.message);
-  return data as string;
+  return await createSessionFn({ data: { nickname, picks, characterId } });
 }
 
 export async function addPeerAnswer(sessionId: string, name: string, picks: string[]) {
-  const { error } = await db.rpc("add_peer_answer", {
-    p_session_id: sessionId,
-    p_name: name,
-    p_picks: picks,
-  });
-  if (error) throw new Error(error.message);
+  await addPeerAnswerFn({ data: { sessionId, name, picks } });
 }
 
 export async function fetchSession(sessionId: string): Promise<SessionData | null> {
-  const { data, error } = await db.rpc("get_session", { p_session_id: sessionId });
-  if (error) throw new Error(error.message);
-  return (data as SessionData | null) ?? null;
+  return (await getSessionFn({ data: { sessionId } })) as SessionData | null;
 }
 
 export async function fetchGlobalStats(): Promise<GlobalStats> {
-  const { data, error } = await db.rpc("get_global_stats");
-  if (error) throw new Error(error.message);
-  return data as GlobalStats;
+  return (await getGlobalStatsFn()) as GlobalStats;
 }
+
