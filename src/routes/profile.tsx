@@ -77,8 +77,3 @@ function Profile() {
     </AppShell>
   );
 }
-
-      </div>
-    </AppShell>
-  );
-}
