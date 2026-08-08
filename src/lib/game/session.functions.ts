@@ -1,6 +1,21 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 
+type PeerAnswerRow = { name: string; picks: string[]; created_at: string };
+type SessionRow = {
+  id: string;
+  nickname: string;
+  self_picks: string[];
+  character_id: string;
+  created_at: string;
+  peers: PeerAnswerRow[];
+};
+type GlobalStatsRow = {
+  total_sessions: number;
+  characters: { character_id: string; count: number }[];
+  keywords: { card_id: string; count: number }[];
+};
+
 const picksSchema = z.array(z.string().min(1).max(64)).min(5).max(15);
 const nameSchema = z.string().max(20);
 
@@ -71,7 +86,7 @@ export const getSessionFn = createServerFn({ method: "POST" })
       }
     ).rpc("get_session", { p_session_id: data.sessionId });
     if (error) throw new Error("결과를 불러오지 못했어요.");
-    return (session ?? null) as unknown;
+    return (session ?? null) as SessionRow | null;
   });
 
 export const getGlobalStatsFn = createServerFn({ method: "GET" }).handler(async () => {
@@ -85,5 +100,5 @@ export const getGlobalStatsFn = createServerFn({ method: "GET" }).handler(async 
     }
   ).rpc("get_global_stats");
   if (error) throw new Error("통계를 불러오지 못했어요.");
-  return data as unknown;
+  return data as GlobalStatsRow;
 });
