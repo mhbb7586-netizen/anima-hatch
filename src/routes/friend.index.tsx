@@ -59,7 +59,7 @@ function FriendLanding() {
           </p>
 
           <div className="mt-6 text-left">
-            <div className="text-[11px] text-[var(--fg)]/70 mb-2">당신의 이름</div>
+            <div className="text-[11px] text-[var(--fg)]/70 mb-2">당신의 이름 (선택)</div>
             <PixelInput
               value={name}
               onChange={(e) => setName(e.target.value.slice(0, 12))}
@@ -68,7 +68,7 @@ function FriendLanding() {
           </div>
         </PixelFrame>
 
-        <div className="mt-5">
+        <div className="mt-5 space-y-2">
           <PixelButton
             full size="lg"
             disabled={name.trim().length < 1}
@@ -77,7 +77,15 @@ function FriendLanding() {
           >
             시작하기
           </PixelButton>
+          <PixelButton
+            full size="md" variant="ghost"
+            onClick={() => navigate({ to: "/friend/swipe", search: { s, from, name: "익명" } })}
+            leftIcon={<PixelIcon name="mask" size={14} />}
+          >
+            익명으로 참여하기
+          </PixelButton>
         </div>
+
       </div>
     </AppShell>
   );

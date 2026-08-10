@@ -1,15 +1,16 @@
 import { useMemo, useState } from "react";
-import { CARD_BY_ID, STATS, countByStat, type Card } from "@/lib/game/data";
+import { CARD_BY_ID, STATS, countByStat, type Card, type StatKey } from "@/lib/game/data";
 import { PixelFrame } from "./PixelFrame";
 import { PixelButton } from "./PixelButton";
 import { PixelIcon } from "./PixelIcon";
 import { cn } from "@/lib/utils";
 
 /**
- * Top 5 strengths: cards of the dominant virtues first, then original selection order.
+ * Top 5 strengths: cards of the highest-scoring virtues first, then selection order.
+ * `scoreByStat` defaults to the raw self-selection counts.
  */
-export function topFiveCards(picks: string[]): Card[] {
-  const counts = countByStat(picks);
+export function topFiveCards(picks: string[], scoreByStat?: Record<StatKey, number>): Card[] {
+  const counts = scoreByStat ?? countByStat(picks);
   return picks
     .map((id, order) => ({ card: CARD_BY_ID[id], order }))
     .filter((e): e is { card: Card; order: number } => Boolean(e.card))
@@ -18,8 +19,9 @@ export function topFiveCards(picks: string[]): Card[] {
     .map((e) => e.card);
 }
 
-export function StrengthWallet({ picks }: { picks: string[] }) {
-  const cards = useMemo(() => topFiveCards(picks), [picks]);
+export function StrengthWallet({ picks, scoreByStat }: { picks: string[]; scoreByStat?: Record<StatKey, number> }) {
+  const cards = useMemo(() => topFiveCards(picks, scoreByStat), [picks, scoreByStat]);
+
   const [index, setIndex] = useState(0);
   const [flipped, setFlipped] = useState<Record<string, boolean>>({});
   const start = useState<{ x: number } | null>(null)[0];

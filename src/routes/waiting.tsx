@@ -1,4 +1,5 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { AppShell } from "@/components/pixel/AppShell";
 import { PixelButton } from "@/components/pixel/PixelButton";
@@ -90,6 +91,8 @@ function Waiting() {
           {count >= 3 && "모든 응답이 도착했어요!"}
         </div>
 
+        <InviteShare sessionId={game.sessionId} nickname={game.nickname} />
+
         {count > 0 && (
           <PixelButton full size="lg" onClick={() => navigate({ to: "/hatch" })}
             rightIcon={<PixelIcon name="arrow" size={14} />}>
@@ -100,6 +103,50 @@ function Waiting() {
     </AppShell>
   );
 }
+
+/** Re-share the invite link straight from the waiting room. */
+function InviteShare({ sessionId, nickname }: { sessionId: string | null; nickname: string }) {
+  const [copied, setCopied] = useState(false);
+  if (!sessionId) return null;
+
+  const url =
+    typeof window === "undefined"
+      ? ""
+      : `${window.location.origin}/friend?s=${sessionId}&from=${encodeURIComponent(nickname || "친구")}`;
+  const text = `${nickname || "친구"}님의 강점을 골라주세요! ANIMA HATCH`;
+
+  function copy() {
+    navigator.clipboard?.writeText(url).then(() => {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1600);
+    }).catch(() => {});
+  }
+
+  function share() {
+    if (navigator.share) navigator.share({ title: "ANIMA HATCH", text, url }).catch(() => {});
+    else copy();
+  }
+
+  return (
+    <PixelFrame className="p-4">
+      <div className="text-[12px] text-[var(--purple-glow)] text-center">친구 더 초대하기</div>
+      <div className="mt-1 text-[10px] text-[var(--fg)]/60 text-center">3명이 모이면 조하리의 창이 전부 열려요</div>
+      <div className="mt-3 p-2 text-[9px] break-all text-[var(--fg)]/70"
+        style={{ background: "#0a0416", boxShadow: "inset 0 0 0 2px var(--pixel-border-dark)" }}>
+        {url}
+      </div>
+      <div className="mt-3 space-y-2">
+        <PixelButton full size="md" onClick={copy} leftIcon={<PixelIcon name="scroll" size={14} />}>
+          {copied ? "복사됐어요!" : "초대 링크 복사"}
+        </PixelButton>
+        <PixelButton full size="md" variant="ghost" onClick={share} leftIcon={<PixelIcon name="share" size={14} />}>
+          카카오톡 등으로 공유하기
+        </PixelButton>
+      </div>
+    </PixelFrame>
+  );
+}
+
 
 function TorchIcon() {
   return (

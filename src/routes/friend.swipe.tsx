@@ -35,7 +35,7 @@ function FriendSwipe() {
     setBusy(true);
     setError(null);
     try {
-      await addPeerAnswer(search.s, search.name || "친구", picks);
+      await addPeerAnswer(search.s, search.name?.trim() || "익명", picks);
     } catch (e) {
       setError(e instanceof Error ? e.message : "전송에 실패했어요");
       setBusy(false);

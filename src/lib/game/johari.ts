@@ -63,3 +63,90 @@ export function toPercent(counts: Record<StatKey, number>): Record<StatKey, numb
   for (const k of STAT_KEYS) out[k] = Math.round((counts[k] / total) * 100);
   return out;
 }
+
+/* ── Weighted Johari scoring ─────────────────────────────────────────────
+ * Open   = self ∩ peers  → weight 3
+ * Hidden = self - peers  → weight 2
+ * Blind  = peers - self  → weight 1
+ * Only the first three peer answers count, so the result is fixed once
+ * three friends have replied (revisiting never changes it).
+ */
+export const WEIGHTS = { open: 3, hidden: 2, blind: 1 } as const;
+
+export type Quadrant = "open" | "hidden" | "blind";
+
+export type WeightedResult = {
+  scores: Record<StatKey, number>;
+  contributions: Record<StatKey, Record<Quadrant, number>>;
+  stat: StatKey;
+  dominant: Quadrant;
+  message: string;
+  peerCount: number;
+  usedPeerCount: number;
+};
+
+const MESSAGES: Record<Quadrant, string> = {
+  open: "나도, 내 곁의 사람들도 인정한 당신의 진짜 모습이에요",
+  hidden: "아직 다 드러나지 않았지만, 당신 안에 분명히 있는 모습이에요",
+  blind: "당신은 몰랐지만, 곁의 사람들은 이미 알고 있던 모습이에요",
+};
+
+function emptyByStat(): Record<StatKey, number> {
+  return { wisdom: 0, courage: 0, humanity: 0, justice: 0, temperance: 0, transcendence: 0 };
+}
+
+export function weightedResult(selfPicks: string[], peers: PeerLike[]): WeightedResult {
+  const used = peers.slice(0, 3);
+  const johari = computeJohari(selfPicks, used);
+
+  const contributions = {} as Record<StatKey, Record<Quadrant, number>>;
+  for (const k of STAT_KEYS) contributions[k] = { open: 0, hidden: 0, blind: 0 };
+  for (const c of johari.open) contributions[c.stat].open++;
+  for (const c of johari.hidden) contributions[c.stat].hidden++;
+  for (const c of johari.blind) contributions[c.stat].blind++;
+
+  const scores = emptyByStat();
+  const openScores = emptyByStat();
+  for (const k of STAT_KEYS) {
+    const q = contributions[k];
+    scores[k] = q.open * WEIGHTS.open + q.hidden * WEIGHTS.hidden + q.blind * WEIGHTS.blind;
+    openScores[k] = q.open;
+  }
+
+  // Tie-break: higher Open contribution, then the virtue the user picked first.
+  const firstPickOrder = emptyByStat();
+  for (const k of STAT_KEYS) firstPickOrder[k] = Number.POSITIVE_INFINITY;
+  selfPicks.forEach((id, i) => {
+    const card = CARD_BY_ID[id];
+    if (card && firstPickOrder[card.stat] === Number.POSITIVE_INFINITY) firstPickOrder[card.stat] = i;
+  });
+
+  let stat: StatKey = STAT_KEYS[0]!;
+  for (const k of STAT_KEYS) {
+    if (k === stat) continue;
+    const better =
+      scores[k] > scores[stat] ||
+      (scores[k] === scores[stat] && openScores[k] > openScores[stat]) ||
+      (scores[k] === scores[stat] && openScores[k] === openScores[stat] &&
+        firstPickOrder[k] < firstPickOrder[stat]);
+    if (better) stat = k;
+  }
+
+  const q = contributions[stat];
+  const weighted: [Quadrant, number][] = [
+    ["open", q.open * WEIGHTS.open],
+    ["hidden", q.hidden * WEIGHTS.hidden],
+    ["blind", q.blind * WEIGHTS.blind],
+  ];
+  const dominant = weighted.reduce((a, b) => (b[1] > a[1] ? b : a))[0];
+
+  return {
+    scores,
+    contributions,
+    stat,
+    dominant,
+    message: MESSAGES[dominant],
+    peerCount: peers.length,
+    usedPeerCount: used.length,
+  };
+}

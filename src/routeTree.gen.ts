@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as WaitingRouteImport } from './routes/waiting'
 import { Route as TutorialRouteImport } from './routes/tutorial'
 import { Route as SwipeRouteImport } from './routes/swipe'
+import { Route as StatsRouteImport } from './routes/stats'
 import { Route as ResultRouteImport } from './routes/result'
 import { Route as ProfileRouteImport } from './routes/profile'
 import { Route as InviteRouteImport } from './routes/invite'
@@ -20,6 +21,7 @@ import { Route as FriendRouteImport } from './routes/friend'
 import { Route as CompleteRouteImport } from './routes/complete'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as FriendIndexRouteImport } from './routes/friend.index'
+import { Route as ResultSessionIdRouteImport } from './routes/result_.$sessionId'
 import { Route as FriendSwipeRouteImport } from './routes/friend.swipe'
 import { Route as FriendCompleteRouteImport } from './routes/friend.complete'
 
@@ -36,6 +38,11 @@ const TutorialRoute = TutorialRouteImport.update({
 const SwipeRoute = SwipeRouteImport.update({
   id: '/swipe',
   path: '/swipe',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const StatsRoute = StatsRouteImport.update({
+  id: '/stats',
+  path: '/stats',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ResultRoute = ResultRouteImport.update({
@@ -78,6 +85,11 @@ const FriendIndexRoute = FriendIndexRouteImport.update({
   path: '/',
   getParentRoute: () => FriendRoute,
 } as any)
+const ResultSessionIdRoute = ResultSessionIdRouteImport.update({
+  id: '/result_/$sessionId',
+  path: '/result/$sessionId',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const FriendSwipeRoute = FriendSwipeRouteImport.update({
   id: '/swipe',
   path: '/swipe',
@@ -97,11 +109,13 @@ export interface FileRoutesByFullPath {
   '/invite': typeof InviteRoute
   '/profile': typeof ProfileRoute
   '/result': typeof ResultRoute
+  '/stats': typeof StatsRoute
   '/swipe': typeof SwipeRoute
   '/tutorial': typeof TutorialRoute
   '/waiting': typeof WaitingRoute
   '/friend/complete': typeof FriendCompleteRoute
   '/friend/swipe': typeof FriendSwipeRoute
+  '/result/$sessionId': typeof ResultSessionIdRoute
   '/friend/': typeof FriendIndexRoute
 }
 export interface FileRoutesByTo {
@@ -111,11 +125,13 @@ export interface FileRoutesByTo {
   '/invite': typeof InviteRoute
   '/profile': typeof ProfileRoute
   '/result': typeof ResultRoute
+  '/stats': typeof StatsRoute
   '/swipe': typeof SwipeRoute
   '/tutorial': typeof TutorialRoute
   '/waiting': typeof WaitingRoute
   '/friend/complete': typeof FriendCompleteRoute
   '/friend/swipe': typeof FriendSwipeRoute
+  '/result/$sessionId': typeof ResultSessionIdRoute
   '/friend': typeof FriendIndexRoute
 }
 export interface FileRoutesById {
@@ -127,11 +143,13 @@ export interface FileRoutesById {
   '/invite': typeof InviteRoute
   '/profile': typeof ProfileRoute
   '/result': typeof ResultRoute
+  '/stats': typeof StatsRoute
   '/swipe': typeof SwipeRoute
   '/tutorial': typeof TutorialRoute
   '/waiting': typeof WaitingRoute
   '/friend/complete': typeof FriendCompleteRoute
   '/friend/swipe': typeof FriendSwipeRoute
+  '/result_/$sessionId': typeof ResultSessionIdRoute
   '/friend/': typeof FriendIndexRoute
 }
 export interface FileRouteTypes {
@@ -144,11 +162,13 @@ export interface FileRouteTypes {
     | '/invite'
     | '/profile'
     | '/result'
+    | '/stats'
     | '/swipe'
     | '/tutorial'
     | '/waiting'
     | '/friend/complete'
     | '/friend/swipe'
+    | '/result/$sessionId'
     | '/friend/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -158,11 +178,13 @@ export interface FileRouteTypes {
     | '/invite'
     | '/profile'
     | '/result'
+    | '/stats'
     | '/swipe'
     | '/tutorial'
     | '/waiting'
     | '/friend/complete'
     | '/friend/swipe'
+    | '/result/$sessionId'
     | '/friend'
   id:
     | '__root__'
@@ -173,11 +195,13 @@ export interface FileRouteTypes {
     | '/invite'
     | '/profile'
     | '/result'
+    | '/stats'
     | '/swipe'
     | '/tutorial'
     | '/waiting'
     | '/friend/complete'
     | '/friend/swipe'
+    | '/result_/$sessionId'
     | '/friend/'
   fileRoutesById: FileRoutesById
 }
@@ -189,9 +213,11 @@ export interface RootRouteChildren {
   InviteRoute: typeof InviteRoute
   ProfileRoute: typeof ProfileRoute
   ResultRoute: typeof ResultRoute
+  StatsRoute: typeof StatsRoute
   SwipeRoute: typeof SwipeRoute
   TutorialRoute: typeof TutorialRoute
   WaitingRoute: typeof WaitingRoute
+  ResultSessionIdRoute: typeof ResultSessionIdRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -215,6 +241,13 @@ declare module '@tanstack/react-router' {
       path: '/swipe'
       fullPath: '/swipe'
       preLoaderRoute: typeof SwipeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/stats': {
+      id: '/stats'
+      path: '/stats'
+      fullPath: '/stats'
+      preLoaderRoute: typeof StatsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/result': {
@@ -273,6 +306,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof FriendIndexRouteImport
       parentRoute: typeof FriendRoute
     }
+    '/result_/$sessionId': {
+      id: '/result_/$sessionId'
+      path: '/result/$sessionId'
+      fullPath: '/result/$sessionId'
+      preLoaderRoute: typeof ResultSessionIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/friend/swipe': {
       id: '/friend/swipe'
       path: '/swipe'
@@ -313,9 +353,11 @@ const rootRouteChildren: RootRouteChildren = {
   InviteRoute: InviteRoute,
   ProfileRoute: ProfileRoute,
   ResultRoute: ResultRoute,
+  StatsRoute: StatsRoute,
   SwipeRoute: SwipeRoute,
   TutorialRoute: TutorialRoute,
   WaitingRoute: WaitingRoute,
+  ResultSessionIdRoute: ResultSessionIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
