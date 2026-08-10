@@ -74,7 +74,7 @@ function Invite() {
 
         <PixelFrame className="p-4" tone="mid">
           <div className="text-[11px] leading-relaxed text-[var(--fg)]/80">
-            친구는 링크를 열어 이름을 적고, 나와 같은 54장의 카드를 스와이프해요.
+            친구는 링크를 열어 이름을 적고, 나와 같은 카드를 스와이프해요.
             응답은 실시간으로 내 결과에 반영돼요.
           </div>
         </PixelFrame>

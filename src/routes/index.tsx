@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { AppShell } from "@/components/pixel/AppShell";
 import { PixelButton } from "@/components/pixel/PixelButton";
@@ -20,7 +21,9 @@ export const Route = createFileRoute("/")({
 function Landing() {
   const game = useGame();
   const navigate = useNavigate();
-  const inProgress = game.myPicks.length > 0 && !game.hatched;
+  const [confirmReset, setConfirmReset] = useState(false);
+  const completed = !!game.sessionId && game.myPicks.length > 0;
+  const inProgress = game.myPicks.length > 0 && !completed;
 
   return (
     <AppShell hideHeader>
@@ -72,28 +75,53 @@ function Landing() {
         </div>
 
         {/* CTA */}
-        <div className="w-full max-w-[320px] mx-auto">
-          <PixelButton full size="lg" onClick={() => {
-            if (!game.nickname) navigate({ to: "/profile" });
-            else if (inProgress) navigate({ to: "/swipe" });
-            else navigate({ to: "/profile" });
-          }} rightIcon={<PixelIcon name="arrow" size={14} />}>
-            {inProgress ? "여정 이어하기" : "시작하기"}
-          </PixelButton>
-
-          {game.myPicks.length > 0 && (
-            <div className="mt-3">
-              <PixelButton full size="sm" variant="ghost" onClick={() => {
-                if (confirm("여정을 처음부터 다시 시작할까요?")) resetState();
-              }}>
+        <div className="w-full max-w-[320px] mx-auto space-y-3">
+          {completed ? (
+            <>
+              <PixelButton full size="lg" onClick={() => navigate({ to: "/result" })}
+                rightIcon={<PixelIcon name="arrow" size={14} />}>
+                내 결과 보기
+              </PixelButton>
+              <PixelButton full size="md" variant="ghost" onClick={() => setConfirmReset(true)}>
                 처음부터 다시
               </PixelButton>
-            </div>
+            </>
+          ) : (
+            <PixelButton full size="lg" onClick={() => {
+              if (inProgress && game.nickname) navigate({ to: "/swipe" });
+              else navigate({ to: "/profile" });
+            }} rightIcon={<PixelIcon name="arrow" size={14} />}>
+              {inProgress ? "여정 이어하기" : "시작하기"}
+            </PixelButton>
           )}
         </div>
 
+        {confirmReset && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center px-6"
+            style={{ background: "rgba(10,4,22,0.85)" }}>
+            <div className="w-full max-w-[300px]">
+              <PixelFrame className="p-5 text-center">
+                <PixelIcon name="skull" size={36} color="var(--danger)" className="mx-auto" />
+                <p className="mt-3 text-[12px] leading-relaxed">
+                  새로 시작하면<br />이전 결과는 사라져요.<br />계속할까요?
+                </p>
+                <div className="mt-4 space-y-2">
+                  <PixelButton full size="md" onClick={() => { resetState(); setConfirmReset(false); navigate({ to: "/profile" }); }}>
+                    새로 시작하기
+                  </PixelButton>
+                  <PixelButton full size="sm" variant="ghost" onClick={() => setConfirmReset(false)}>
+                    취소
+                  </PixelButton>
+                </div>
+              </PixelFrame>
+            </div>
+          </div>
+        )}
+
         <div className="mt-6 grid grid-cols-3 gap-2 w-full max-w-[340px]">
-          <MiniStep to="/tutorial" icon="book" label="강점 선택" />
+          {completed
+            ? <MiniStep to="/stats" icon="crystal" label="통계" />
+            : <MiniStep to="/tutorial" icon="book" label="강점 선택" />}
           <MiniStep to="/invite" icon="heart" label="친구 초대" />
           <MiniStep to="/result" icon="ghost" label="내 결과" />
         </div>
@@ -112,6 +140,7 @@ function MiniStep({ to, icon, label }: { to: string; icon: string; label: string
     </Link>
   );
 }
+
 
 /** Big pixel-egg drawn in SVG */
 function PixelEgg() {
