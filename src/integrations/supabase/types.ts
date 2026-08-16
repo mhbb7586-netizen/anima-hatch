@@ -79,21 +79,18 @@ export type Database = {
         Row: {
           character_id: string
           created_at: string
-          email: string | null
           id: string
           nickname: string
         }
         Insert: {
           character_id?: string
           created_at?: string
-          email?: string | null
           id?: string
           nickname?: string
         }
         Update: {
           character_id?: string
           created_at?: string
-          email?: string | null
           id?: string
           nickname?: string
         }
@@ -115,7 +112,6 @@ export type Database = {
       create_session: {
         Args: {
           p_character_id: string
-          p_email: string
           p_keyword_ids: number[]
           p_nickname: string
         }
