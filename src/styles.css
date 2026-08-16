@@ -103,11 +103,25 @@
   }
   html, body, #root {
     height: 100%;
+    width: 100%;
     background: var(--bg-deep);
     color: var(--fg);
     font-family: var(--font-pixel);
     font-weight: 400;
     letter-spacing: 0.02em;
+  }
+  html, body {
+    /* the app shell owns scrolling — the page itself never scrolls */
+    overflow: hidden;
+    overscroll-behavior: none;
+    -webkit-text-size-adjust: 100%;
+  }
+  /* no double-tap-to-zoom, normal scrolling/tapping preserved */
+  html {
+    touch-action: manipulation;
+  }
+  button, a, [role="button"] {
+    touch-action: manipulation;
   }
   h1, h2, h3, h4, h5, h6 { font-family: var(--font-pixel); font-weight: 400; }
   button { font-family: var(--font-pixel); }
