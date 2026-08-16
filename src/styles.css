@@ -103,11 +103,25 @@
   }
   html, body, #root {
     height: 100%;
+    width: 100%;
     background: var(--bg-deep);
     color: var(--fg);
     font-family: var(--font-pixel);
     font-weight: 400;
     letter-spacing: 0.02em;
+  }
+  html, body {
+    /* the app shell owns scrolling — the page itself never scrolls */
+    overflow: hidden;
+    overscroll-behavior: none;
+    -webkit-text-size-adjust: 100%;
+  }
+  /* no double-tap-to-zoom, normal scrolling/tapping preserved */
+  html {
+    touch-action: manipulation;
+  }
+  button, a, [role="button"] {
+    touch-action: manipulation;
   }
   h1, h2, h3, h4, h5, h6 { font-family: var(--font-pixel); font-weight: 400; }
   button { font-family: var(--font-pixel); }
@@ -232,3 +246,16 @@
 .animate-hatch-flash { animation: hatch-flash 1.6s ease-in-out both; }
 .animate-glow-pulse { animation: glow-pulse 2.4s ease-in-out infinite; }
 .animate-rise { animation: rise 0.6s ease-out both; }
+
+/* ============ SPRITE EDGES ============ */
+/* Character/item PNGs keep their pixel look, but get a clean dark contour so
+   the cut-out edge never looks ragged against a card or the starry backdrop. */
+@utility pixel-sprite {
+  image-rendering: pixelated;
+  filter:
+    drop-shadow(1px 0 0 #0a0416)
+    drop-shadow(-1px 0 0 #0a0416)
+    drop-shadow(0 1px 0 #0a0416)
+    drop-shadow(0 -1px 0 #0a0416)
+    drop-shadow(0 0 14px rgba(168, 85, 247, 0.45));
+}
