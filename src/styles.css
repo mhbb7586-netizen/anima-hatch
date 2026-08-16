@@ -246,3 +246,16 @@
 .animate-hatch-flash { animation: hatch-flash 1.6s ease-in-out both; }
 .animate-glow-pulse { animation: glow-pulse 2.4s ease-in-out infinite; }
 .animate-rise { animation: rise 0.6s ease-out both; }
+
+/* ============ SPRITE EDGES ============ */
+/* Character/item PNGs keep their pixel look, but get a clean dark contour so
+   the cut-out edge never looks ragged against a card or the starry backdrop. */
+@utility pixel-sprite {
+  image-rendering: pixelated;
+  filter:
+    drop-shadow(1px 0 0 #0a0416)
+    drop-shadow(-1px 0 0 #0a0416)
+    drop-shadow(0 1px 0 #0a0416)
+    drop-shadow(0 -1px 0 #0a0416)
+    drop-shadow(0 0 14px rgba(168, 85, 247, 0.45));
+}
