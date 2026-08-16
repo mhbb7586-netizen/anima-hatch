@@ -76,7 +76,11 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
   head: () => ({
     meta: [
       { charSet: "utf-8" },
-      { name: "viewport", content: "width=device-width, initial-scale=1, viewport-fit=cover" },
+      {
+        name: "viewport",
+        content:
+          "width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, viewport-fit=cover",
+      },
       { name: "theme-color", content: "#1A1035" },
       { title: "ANIMA HATCH — 나를 부화시키는 픽셀 여정" },
       { name: "description", content: "카드를 스와이프해 나의 강점을 모으고, 알을 부화시켜 나만의 RPG 클래스를 얻어보세요." },
