@@ -118,12 +118,10 @@ function Landing() {
           </div>
         )}
 
-        <div className="mt-6 grid grid-cols-3 gap-2 w-full max-w-[340px]">
-          {completed
-            ? <MiniStep to="/stats" icon="crystal" label="통계" />
-            : <MiniStep to="/tutorial" icon="book" label="강점 선택" />}
-          <MiniStep to="/invite" icon="heart" label="친구 초대" />
-          <MiniStep to="/result" icon="ghost" label="내 결과" />
+        {/* "내 결과" only exists once the journey produced a result. */}
+        <div className="mt-6 grid grid-cols-2 gap-2 w-full max-w-[300px]">
+          <MiniStep to="/stats" icon="crystal" label="통계" />
+          {completed && <MiniStep to="/result" icon="ghost" label="내 결과" />}
         </div>
       </div>
     </AppShell>
