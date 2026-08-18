@@ -22,14 +22,12 @@ export const Route = createFileRoute("/profile")({
 function Profile() {
   const game = useGame();
   const [name, setName] = useState(game.nickname);
-  const [email, setEmail] = useState(game.email);
   const navigate = useNavigate();
-  const emailOk = email.trim() === "" || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim());
   return (
     <AppShell title="모험가 등록" back="/">
-      <div className="pt-6 pb-8 max-w-[340px] mx-auto">
+      <div className="pt-4 pb-6 max-w-[340px] mx-auto">
         <PixelFrame className="p-6 flex flex-col items-center">
-          <PixelIcon name="mask" size={64} className="text-[var(--purple-glow)] animate-glow-pulse" />
+          <PixelIcon name="mask" size={56} className="text-[var(--purple-glow)] animate-glow-pulse" />
           <div className="mt-4 text-[16px] text-[var(--purple-glow)]">이름을 알려주세요</div>
           <div className="mt-2 text-[11px] text-[var(--fg)]/70 text-center">
             여정 곳곳에서 당신을 부를 이름이에요
@@ -43,29 +41,15 @@ function Profile() {
             />
             <div className="mt-1 text-right text-[10px] text-[var(--fg)]/50">{name.length}/12</div>
           </div>
-          <div className="mt-4 w-full">
-            <div className="mb-1 text-[10px] text-[var(--fg)]/60">이메일 (선택)</div>
-            <PixelInput
-              value={email}
-              onChange={(e) => setEmail(e.target.value.slice(0, 254))}
-              placeholder="alchemist@example.com"
-              inputMode="email"
-            />
-            {!emailOk && (
-              <div className="mt-1 text-[10px] text-[var(--courage)]">
-                이메일 형식을 확인해주세요
-              </div>
-            )}
-          </div>
         </PixelFrame>
 
         <div className="mt-6">
           <PixelButton
             full
             size="lg"
-            disabled={name.trim().length < 2 || !emailOk}
+            disabled={name.trim().length < 2}
             onClick={() => {
-              setState({ nickname: name.trim(), email: email.trim() });
+              setState({ nickname: name.trim() });
               navigate({ to: "/tutorial" });
             }}
             rightIcon={<PixelIcon name="arrow" size={14} />}
