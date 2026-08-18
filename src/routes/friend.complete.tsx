@@ -1,5 +1,6 @@
-import { createFileRoute, useSearch } from "@tanstack/react-router";
+import { createFileRoute, useNavigate, useSearch } from "@tanstack/react-router";
 import { AppShell } from "@/components/pixel/AppShell";
+import { PixelButton } from "@/components/pixel/PixelButton";
 import { PixelFrame } from "@/components/pixel/PixelFrame";
 import { PixelIcon } from "@/components/pixel/PixelIcon";
 
@@ -23,13 +24,14 @@ export const Route = createFileRoute("/friend/complete")({
 
 function FriendComplete() {
   const search = useSearch({ from: "/friend/complete" });
+  const navigate = useNavigate();
   return (
     <AppShell hideHeader>
-      <div className="pt-16 pb-10 max-w-[340px] mx-auto text-center space-y-5">
+      <div className="pt-8 pb-8 max-w-[340px] mx-auto text-center space-y-5">
         <div className="animate-float-slow">
-          <PixelIcon name="heart" size={80} color="var(--creativity)" />
+          <PixelIcon name="heart" size={68} color="var(--creativity)" />
         </div>
-        <PixelFrame className="p-6">
+        <PixelFrame className="p-5">
           <div className="text-[16px] text-[var(--purple-glow)]">응답 전송 완료!</div>
           <p className="mt-3 text-[11px] leading-relaxed text-[var(--fg)]/80">
             {search.name || "당신"}의 눈으로 본<br />
@@ -37,6 +39,14 @@ function FriendComplete() {
             알을 부화시키러 갔어요.
           </p>
         </PixelFrame>
+        <PixelButton
+          full
+          size="lg"
+          onClick={() => navigate({ to: "/profile" })}
+          rightIcon={<PixelIcon name="arrow" size={14} />}
+        >
+          나도 하러가기
+        </PixelButton>
         <p className="text-[10px] text-[var(--fg)]/60">이 창은 닫아도 괜찮아요.</p>
       </div>
     </AppShell>

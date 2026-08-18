@@ -27,7 +27,7 @@ function Landing() {
 
   return (
     <AppShell hideHeader>
-      <div className="flex flex-col items-center pt-6 pb-6">
+      <div className="flex h-full flex-col items-center justify-center py-2">
         {/* moon */}
         <div className="w-full flex justify-end pr-2">
           <PixelIcon name="moon" size={40} className="text-[var(--purple-glow)]" />
@@ -35,7 +35,7 @@ function Landing() {
 
         {/* Title */}
         <h1
-          className="mt-2 text-[44px] tracking-[0.08em] text-[var(--purple-glow)] text-center"
+          className="mt-1 text-[40px] tracking-[0.08em] text-[var(--purple-glow)] text-center"
           style={{
             textShadow:
               "3px 3px 0 #0a0416, 3px 0 0 #0a0416, 0 3px 0 #0a0416, -3px 0 0 #0a0416, 0 -3px 0 #0a0416, 0 0 18px rgba(168,85,247,0.6)",
@@ -43,10 +43,10 @@ function Landing() {
         >
           ANIMA<br />HATCH
         </h1>
-        <div className="mt-3 text-[12px] text-[var(--fg)]/80">너를 이해하는 새로운 모험</div>
+        <div className="mt-2 text-[12px] text-[var(--fg)]/80">너를 이해하는 새로운 모험</div>
 
         {/* Egg */}
-        <div className="relative mt-10 mb-10 flex items-center justify-center">
+        <div className="relative mt-6 mb-8 flex items-center justify-center">
           <div
             className="absolute w-[220px] h-[40px] rounded-full"
             style={{
@@ -118,12 +118,10 @@ function Landing() {
           </div>
         )}
 
-        <div className="mt-6 grid grid-cols-3 gap-2 w-full max-w-[340px]">
-          {completed
-            ? <MiniStep to="/stats" icon="crystal" label="통계" />
-            : <MiniStep to="/tutorial" icon="book" label="강점 선택" />}
-          <MiniStep to="/invite" icon="heart" label="친구 초대" />
-          <MiniStep to="/result" icon="ghost" label="내 결과" />
+        {/* "내 결과" only exists once the journey produced a result. */}
+        <div className="mt-6 grid grid-cols-2 gap-2 w-full max-w-[300px]">
+          <MiniStep to="/stats" icon="crystal" label="통계" />
+          {completed && <MiniStep to="/result" icon="ghost" label="내 결과" />}
         </div>
       </div>
     </AppShell>
@@ -169,7 +167,7 @@ function PixelEgg() {
     }
   }
   return (
-    <svg width={180} height={220} viewBox="0 0 16 20" shapeRendering="crispEdges" style={{ filter: "drop-shadow(0 0 20px rgba(168,85,247,0.4))" }}>
+    <svg width={150} height={186} viewBox="0 0 16 20" shapeRendering="crispEdges" style={{ filter: "drop-shadow(0 0 20px rgba(168,85,247,0.4))" }}>
       {shape.map(([x, y, c]) => P(x, y, c))}
     </svg>
   );

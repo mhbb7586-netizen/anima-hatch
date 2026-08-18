@@ -101,11 +101,8 @@ export function StrengthWallet({ picks, scoreByStat }: { picks: string[]; scoreB
         ))}
       </div>
 
-      <div className="mt-4 grid grid-cols-3 gap-2">
+      <div className="mt-4 grid grid-cols-2 gap-2">
         <PixelButton size="sm" variant="ghost" onClick={() => go(-1)} disabled={index === 0}>이전</PixelButton>
-        <PixelButton size="sm" onClick={() => downloadCard(card)} leftIcon={<PixelIcon name="download" size={12} />}>
-          저장
-        </PixelButton>
         <PixelButton size="sm" variant="ghost" onClick={() => go(1)} disabled={index === cards.length - 1}>다음</PixelButton>
       </div>
     </PixelFrame>
@@ -128,51 +125,4 @@ function WalletFace({
       {children}
     </div>
   );
-}
-
-/** Renders the card to a canvas and triggers a PNG download. */
-function downloadCard(card: Card) {
-  const stat = STATS[card.stat];
-  const w = 660, h = 840;
-  const canvas = document.createElement("canvas");
-  canvas.width = w; canvas.height = h;
-  const ctx = canvas.getContext("2d");
-  if (!ctx) return;
-
-  ctx.imageSmoothingEnabled = false;
-  ctx.fillStyle = stat.hex;
-  ctx.fillRect(0, 0, w, h);
-  ctx.fillStyle = "#0a0416";
-  ctx.fillRect(0, 0, w, 16); ctx.fillRect(0, h - 16, w, 16);
-  ctx.fillRect(0, 0, 16, h); ctx.fillRect(w - 16, 0, 16, h);
-
-  ctx.fillStyle = "#0a0416";
-  ctx.fillRect(180, 180, 300, 300);
-
-  const font = '"Galmuri11", monospace';
-  ctx.textAlign = "center";
-  ctx.fillStyle = "#0a0416";
-  ctx.font = `28px ${font}`;
-  ctx.fillText(`#${stat.label}`, w / 2, 110);
-  ctx.font = `64px ${font}`;
-  ctx.fillText(card.keyword, w / 2, 590);
-  ctx.font = `24px ${font}`;
-  ctx.fillText(card.description, w / 2, 660);
-  ctx.font = `20px ${font}`;
-  ctx.fillText("ANIMA HATCH", w / 2, 780);
-
-  // pixel emblem inside the dark square
-  ctx.fillStyle = stat.hex;
-  const cells = 5, cell = 40, ox = 330 - (cells * cell) / 2, oy = 330 - (cells * cell) / 2;
-  const seed = card.id.split("").reduce((a, c) => a + c.charCodeAt(0), 0);
-  for (let y = 0; y < cells; y++) {
-    for (let x = 0; x < cells; x++) {
-      if ((x * 7 + y * 13 + seed) % 3 !== 0) ctx.fillRect(ox + x * cell, oy + y * cell, cell, cell);
-    }
-  }
-
-  const link = document.createElement("a");
-  link.download = `anima-hatch-${card.keyword}.png`;
-  link.href = canvas.toDataURL("image/png");
-  link.click();
 }

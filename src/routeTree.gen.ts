@@ -19,6 +19,7 @@ import { Route as InviteRouteImport } from './routes/invite'
 import { Route as HatchRouteImport } from './routes/hatch'
 import { Route as FriendRouteImport } from './routes/friend'
 import { Route as CompleteRouteImport } from './routes/complete'
+import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as FriendIndexRouteImport } from './routes/friend.index'
 import { Route as ResultSessionIdRouteImport } from './routes/result_.$sessionId'
@@ -75,6 +76,11 @@ const CompleteRoute = CompleteRouteImport.update({
   path: '/complete',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminRoute = AdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -103,6 +109,7 @@ const FriendCompleteRoute = FriendCompleteRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/admin': typeof AdminRoute
   '/complete': typeof CompleteRoute
   '/friend': typeof FriendRouteWithChildren
   '/hatch': typeof HatchRoute
@@ -120,6 +127,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/admin': typeof AdminRoute
   '/complete': typeof CompleteRoute
   '/hatch': typeof HatchRoute
   '/invite': typeof InviteRoute
@@ -137,6 +145,7 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/admin': typeof AdminRoute
   '/complete': typeof CompleteRoute
   '/friend': typeof FriendRouteWithChildren
   '/hatch': typeof HatchRoute
@@ -156,6 +165,7 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/admin'
     | '/complete'
     | '/friend'
     | '/hatch'
@@ -173,6 +183,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/admin'
     | '/complete'
     | '/hatch'
     | '/invite'
@@ -189,6 +200,7 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/admin'
     | '/complete'
     | '/friend'
     | '/hatch'
@@ -207,6 +219,7 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AdminRoute: typeof AdminRoute
   CompleteRoute: typeof CompleteRoute
   FriendRoute: typeof FriendRouteWithChildren
   HatchRoute: typeof HatchRoute
@@ -292,6 +305,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CompleteRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin': {
+      id: '/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AdminRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -347,6 +367,7 @@ const FriendRouteWithChildren =
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AdminRoute: AdminRoute,
   CompleteRoute: CompleteRoute,
   FriendRoute: FriendRouteWithChildren,
   HatchRoute: HatchRoute,

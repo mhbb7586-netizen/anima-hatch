@@ -1,11 +1,13 @@
 import { createFileRoute, useNavigate, useSearch } from "@tanstack/react-router";
 import { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { AppShell } from "@/components/pixel/AppShell";
 import { PixelFrame } from "@/components/pixel/PixelFrame";
 import { PixelButton } from "@/components/pixel/PixelButton";
 import { PixelInput } from "@/components/pixel/PixelInput";
 import { PixelIcon } from "@/components/pixel/PixelIcon";
 import { CARDS, MAX_PICKS, MIN_PICKS } from "@/lib/game/data";
+import { fetchSession } from "@/lib/game/api";
 
 type Search = { s?: string; from?: string };
 
@@ -30,6 +32,12 @@ function FriendLanding() {
   const [name, setName] = useState("");
   const navigate = useNavigate();
 
+  const { data: session, isLoading } = useQuery({
+    queryKey: ["session", s],
+    queryFn: () => fetchSession(s!),
+    enabled: !!s,
+  });
+
   if (!s) {
     return (
       <AppShell hideHeader>
@@ -44,21 +52,48 @@ function FriendLanding() {
     );
   }
 
+  // Three friends is the hard limit — the server refuses more, so say so up front.
+  if (session?.closed) {
+    return (
+      <AppShell hideHeader>
+        <div className="pt-8 max-w-[340px] mx-auto space-y-4">
+          <PixelFrame className="p-6 text-center">
+            <PixelIcon name="key" size={44} color="var(--justice)" className="mx-auto" />
+            <div className="mt-3 text-[14px] text-[var(--justice)]">참여가 마감됐어요</div>
+            <p className="mt-2 text-[11px] leading-relaxed text-[var(--fg)]/75">
+              이미 친구 3명이 모두 답해서<br />
+              {session.nickname || from || "친구"}의 알은 부화 준비를 마쳤어요.
+            </p>
+          </PixelFrame>
+          <PixelButton full size="lg" onClick={() => navigate({ to: "/profile" })}
+            rightIcon={<PixelIcon name="arrow" size={14} />}>
+            나도 하러가기
+          </PixelButton>
+        </div>
+      </AppShell>
+    );
+  }
+
   return (
     <AppShell hideHeader>
-      <div className="pt-6 pb-6 max-w-[340px] mx-auto">
-        <PixelFrame className="p-6 text-center">
-          <PixelIcon name="heart" size={44} color="var(--creativity)" className="mx-auto animate-glow-pulse" />
+      <div className="pt-4 pb-6 max-w-[340px] mx-auto">
+        <PixelFrame className="p-5 text-center">
+          <PixelIcon name="heart" size={40} color="var(--creativity)" className="mx-auto animate-glow-pulse" />
           <div className="mt-3 text-[16px] text-[var(--purple-glow)]">
-            {from || "친구"}의 강점을<br />골라주세요
+            {session?.nickname || from || "친구"}의 강점을<br />골라주세요
           </div>
           <p className="mt-3 text-[11px] text-[var(--fg)]/75 leading-relaxed">
             총 {CARDS.length}장의 카드 중<br />
             {MIN_PICKS}~{MAX_PICKS}개를 골라주면 돼요.<br />
             당신 눈에 비친 모습이 알을 부화시켜요.
           </p>
+          {!isLoading && session && (
+            <div className="mt-3 text-[10px] text-[var(--fg)]/60">
+              현재 {session.peer_count} / 3명이 답했어요
+            </div>
+          )}
 
-          <div className="mt-6 text-left">
+          <div className="mt-5 text-left">
             <div className="text-[11px] text-[var(--fg)]/70 mb-2">당신의 이름 (선택)</div>
             <PixelInput
               value={name}
@@ -68,7 +103,7 @@ function FriendLanding() {
           </div>
         </PixelFrame>
 
-        <div className="mt-5 space-y-2">
+        <div className="mt-4 space-y-2">
           <PixelButton
             full size="lg"
             disabled={name.trim().length < 1}
