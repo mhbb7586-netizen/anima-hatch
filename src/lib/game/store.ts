@@ -2,8 +2,6 @@ import { useSyncExternalStore } from "react";
 
 export type GameState = {
   nickname: string;
-  /** Optional email the user may leave for their result. */
-  email: string;
   /** Card ids the user selected for themselves, in selection order. */
   myPicks: string[];
   /** Server session id — the shareable identity of this result. */
@@ -15,7 +13,6 @@ const KEY = "anima-hatch-state-v2";
 
 const defaultState: GameState = {
   nickname: "",
-  email: "",
   myPicks: [],
   sessionId: null,
   hatched: false,
