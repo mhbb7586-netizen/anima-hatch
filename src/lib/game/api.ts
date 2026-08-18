@@ -11,10 +11,13 @@ export type PeerAnswer = { name: string; picks: string[]; created_at: string };
 export type SessionData = {
   id: string;
   nickname: string;
-  email: string | null;
   self_picks: string[];
   character_id: string;
   created_at: string;
+  /** Friends who already answered (hard-capped at 3 by the server). */
+  peer_count: number;
+  /** True once three friends answered — no further answers are accepted. */
+  closed: boolean;
   peers: PeerAnswer[];
 };
 
@@ -24,14 +27,15 @@ export type GlobalStats = {
   keywords: { card_id: string; count: number }[];
 };
 
+export const PEER_LIMIT = 3;
+
 export async function createSession(
   nickname: string,
   picks: string[],
   characterId: string,
-  email?: string,
 ): Promise<string> {
   return await createSessionFn({
-    data: { nickname, email: email?.trim() || undefined, keywordIds: toKeywordIds(picks), characterId },
+    data: { nickname, keywordIds: toKeywordIds(picks), characterId },
   });
 }
 
@@ -47,10 +51,11 @@ export async function fetchSession(sessionId: string): Promise<SessionData | nul
   return {
     id: row.id,
     nickname: row.nickname,
-    email: row.email,
     self_picks: toCardIds(row.self_keyword_ids ?? []),
     character_id: row.character_id,
     created_at: row.created_at,
+    peer_count: row.peer_count ?? (row.peers ?? []).length,
+    closed: !!row.closed,
     peers: (row.peers ?? []).map((p) => ({
       name: p.peer_nickname,
       picks: toCardIds(p.keyword_ids ?? []),
