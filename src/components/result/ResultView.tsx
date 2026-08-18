@@ -14,6 +14,7 @@ import {
 import { computeJohari, peerStatCounts, toPercent, weightedResult } from "@/lib/game/johari";
 import { fetchSession } from "@/lib/game/api";
 import { useGame } from "@/lib/game/store";
+import { downloadResultCard } from "@/lib/game/result-image";
 
 type Props = {
   /** Session to display. When null the viewer's own local session is used. */
@@ -83,7 +84,7 @@ export function ResultView({ sessionId, own }: Props) {
   }
 
   return (
-    <AppShell title={own ? "나의 결과" : `${nickname}님의 결과`} back="/" action={
+    <AppShell scroll title={own ? "나의 결과" : `${nickname}님의 결과`} back="/" action={
       <button onClick={share} aria-label="결과 공유하기" className="flex h-10 w-10 items-center justify-center">
         <PixelIcon name="share" size={20} color="var(--purple-glow)" />
       </button>
@@ -93,8 +94,8 @@ export function ResultView({ sessionId, own }: Props) {
         <PixelFrame className="p-5 text-center">
           <PixelTag tone="purple">{STATS[weighted.stat].label}의 결</PixelTag>
           <div className="mt-3 flex justify-center">
-            <img src={character.image} alt={character.name} className="animate-float-slow"
-              style={{ height: 170, imageRendering: "pixelated", filter: "drop-shadow(0 0 18px var(--purple-glow))" }} />
+            <img src={character.image} alt={character.name} className="animate-float-slow pixel-sprite"
+              style={{ height: 170 }} />
           </div>
           <div className="mt-2 text-[22px] text-[var(--purple-glow)]">{character.name}</div>
           <div className="text-[11px] text-[var(--fg)]/70">{character.subtitle} · {character.tags}</div>
@@ -111,7 +112,7 @@ export function ResultView({ sessionId, own }: Props) {
         {/* Weighted virtue scores */}
         <PixelFrame className="p-4">
           <div className="text-[12px] text-[var(--purple-glow)] mb-1">덕목 점수</div>
-          <div className="text-[9px] text-[var(--fg)]/55 mb-3">열린 창 ×3 · 숨겨진 창 ×2 · 보이지 않는 창 ×1</div>
+          <div className="text-[9px] text-[var(--fg)]/55 mb-3">나와 친구의 선택을 기반으로 계산된 결과에요</div>
           <div className="space-y-2">
             {STAT_KEYS.map((k) => {
               const maxScore = Math.max(...STAT_KEYS.map((s) => weighted.scores[s]), 1);
@@ -160,6 +161,17 @@ export function ResultView({ sessionId, own }: Props) {
         <div className="space-y-2">
           <PixelButton full size="lg" onClick={share} leftIcon={<PixelIcon name="share" size={14} />}>
             {copied ? "링크 복사됨!" : "결과 공유하기"}
+          </PixelButton>
+          <PixelButton full size="md" variant="ghost"
+            onClick={() => downloadResultCard({
+              nickname,
+              character,
+              statLabel: STATS[weighted.stat].label,
+              statHex: STATS[weighted.stat].hex,
+              scores: weighted.scores,
+            })}
+            leftIcon={<PixelIcon name="download" size={14} />}>
+            결과 이미지 저장
           </PixelButton>
           {own ? (
             <PixelButton full size="md" variant="ghost" onClick={() => navigate({ to: "/stats" })}
