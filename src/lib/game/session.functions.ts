@@ -5,10 +5,11 @@ type PeerAnswerRow = { peer_nickname: string; keyword_ids: number[]; created_at:
 type SessionRow = {
   id: string;
   nickname: string;
-  email: string | null;
   self_keyword_ids: number[];
   character_id: string;
   created_at: string;
+  peer_count: number;
+  closed: boolean;
   peers: PeerAnswerRow[];
 };
 type GlobalStatsRow = {
@@ -22,7 +23,6 @@ const nameSchema = z.string().max(20);
 
 const createInput = z.object({
   nickname: nameSchema,
-  email: z.string().email().max(254).optional().or(z.literal("")),
   keywordIds: keywordIdsSchema,
   characterId: z.string().max(20),
 });
@@ -48,7 +48,6 @@ export const createSessionFn = createServerFn({ method: "POST" })
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     const { data: id, error } = await (supabaseAdmin as unknown as Rpc).rpc("create_session", {
       p_nickname: data.nickname,
-      p_email: data.email ?? null,
       p_keyword_ids: data.keywordIds,
       p_character_id: data.characterId,
     });
@@ -65,7 +64,11 @@ export const addPeerAnswerFn = createServerFn({ method: "POST" })
       p_peer_nickname: data.peerNickname,
       p_keyword_ids: data.keywordIds,
     });
-    if (error) throw new Error("응답을 저장하지 못했어요.");
+    if (error) {
+      // The database caps a session at three friends — surface that as its own state.
+      if (error.message.includes("session full")) throw new Error("SESSION_FULL");
+      throw new Error("응답을 저장하지 못했어요.");
+    }
     return { ok: true };
   });
 
